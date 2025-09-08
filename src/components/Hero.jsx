@@ -79,7 +79,7 @@ const Hero = ({ darkMode }) => {
               {portfolioData.location}
             </p>
             <img
-              src="/Media/bg-img-portfolio.jpg"
+              src="./Media/bg-img-portfolio.jpg"
               alt="Project Preview"
               className="mt-3 h-20 sm:h-36 w-full object-cover rounded-lg"
             />

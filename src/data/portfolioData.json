@@ -5,7 +5,7 @@
     "email": "manojkumar06t@gmail.com",
     "phone": "8310147887",
     "bio": "Greetings! I'm Manoj, a dedicated Frontend Developer renowned for sculpting remarkable digital experiences. With an unwavering commitment to precision and a profound passion for unraveling complex challenges, I specialize in breathing life into websites and web applications by seamlessly blending artistic creativity with rock-solid technical prowess.",
-    "avatar": "/Media/dp.png",
+    "avatar": "./Media/dp.png",
     "brands": [
       { "name": "HustleAI" },
       { "name": "KFC"}
@@ -36,7 +36,7 @@
         "id": 1,
         "title": "Habits Tracker",
         "description": "Track daily habits and build consistency with a clean, responsive UI.",
-        "image": "/Media/habit-img.png",
+        "image": "./Media/habit-img.png",
         "technologies": ["React", "LocalStorage", "CSS"],
         "liveUrl": "https://habitstrackerforus.netlify.app/",
         "githubUrl": "https://habitstrackerforus.netlify.app/"
@@ -45,7 +45,7 @@
         "id": 2,
         "title": "BuyBUSY Shop",
         "description": "E-commerce storefront with product listings and cart experience.",
-        "image": "/Media/Busy.jpg",
+        "image": "./Media/Busy.jpg",
         "technologies": ["React", "Context", "CSS"],
         "liveUrl": "https://buybustshopsite.netlify.app/",
         "githubUrl": "https://buybustshopsite.netlify.app/"
@@ -54,7 +54,7 @@
         "id": 3,
         "title": "Book Reviewer",
         "description": "App to review and rate books with simple submission flow.",
-        "image": "/Media/Bookreviewer.jpg",
+        "image": "./Media/Bookreviewer.jpg",
         "technologies": ["Node.js", "Express", "MongoDB"],
         "liveUrl": "http://54.87.130.97:3000/",
         "githubUrl": "http://54.87.130.97:3000/"
@@ -63,7 +63,7 @@
         "id": 4,
         "title": "Photo Folio",
         "description": "A minimal photo portfolio to showcase albums and shots.",
-        "image": "/Media/Folio.jpg",
+        "image": "./Media/Folio.jpg",
         "technologies": ["HTML", "CSS", "JS"],
         "liveUrl": "https://ourphotofolio.netlify.app/",
         "githubUrl": "https://ourphotofolio.netlify.app/"
@@ -72,7 +72,7 @@
         "id": 5,
         "title": "Expense Tracker",
         "description": "Track monthly expenses with neat visual summaries.",
-        "image": "/Media/Expense_tracker.jpeg",
+        "image": "./Media/Expense_tracker.jpeg",
         "technologies": ["React", "Hooks", "CSS"],
         "liveUrl": "https://expensetrackerforuall.netlify.app/",
         "githubUrl": "https://expensetrackerforuall.netlify.app/"
@@ -81,7 +81,7 @@
         "id": 6,
         "title": "Meals App",
         "description": "Browse meals and recipes with category filters.",
-        "image": "/Media/Meals_app.png",
+        "image": "./Media/Meals_app.png",
         "technologies": ["HTML", "CSS", "JS"],
         "liveUrl": "https://manojkumart06.github.io/MealsApp/",
         "githubUrl": "https://manojkumart06.github.io/MealsApp/"
@@ -90,7 +90,7 @@
         "id": 7,
         "title": "Shopping Cart",
         "description": "Simple shopping cart demo with add/remove and totals.",
-        "image": "/Media/Shopingcart.jpg",
+        "image": "./Media/Shopingcart.jpg",
         "technologies": ["React", "Context", "CSS"],
         "liveUrl": "https://shoppyngcart.netlify.app/",
         "githubUrl": "https://shoppyngcart.netlify.app/"
@@ -99,7 +99,7 @@
         "id": 8,
         "title": "Storm Sense (Weather)",
         "description": "Live weather widget with city search and current conditions.",
-        "image": "/Media/weather.jpg",
+        "image": "./Media/weather.jpg",
         "technologies": ["JS", "Weather API", "CSS"],
         "liveUrl": "https://stormsensewidget.netlify.app/",
         "githubUrl": "https://stormsensewidget.netlify.app/"
@@ -108,7 +108,7 @@
         "id": 9,
         "title": "Movie App",
         "description": "Discover and rate movies with a responsive, card-based UI.",
-        "image": "/Media/MovieApp.png",
+        "image": "./Media/MovieApp.png",
         "technologies": ["React", "TMDB API", "CSS"],
         "liveUrl": "https://moviereactbymanoj.netlify.app/",
         "githubUrl": "https://moviereactbymanoj.netlify.app/"
@@ -117,7 +117,7 @@
         "id": 10,
         "title": "Node.js Authentication",
         "description": "Auth boilerplate with sessions and secure flows.",
-        "image": "/Media/nodejsauth.PNG",
+        "image": "./Media/nodejsauth.PNG",
         "technologies": ["Node.js", "Express", "Passport"],
         "liveUrl": "https://github.com/manojkumart06/Nodejs-Authentication",
         "githubUrl": "https://github.com/manojkumart06/Nodejs-Authentication"
@@ -126,7 +126,7 @@
         "id": 11,
         "title": "Music Player",
         "description": "Lightweight browser music player.",
-        "image": "/Media/Music.jpg",
+        "image": "./Media/Music.jpg",
         "technologies": ["HTML", "CSS", "JS"],
         "liveUrl": "https://mymusicenjoy.netlify.app/",
         "githubUrl": "https://mymusicenjoy.netlify.app/"
@@ -135,7 +135,7 @@
         "id": 12,
         "title": "iPod UI",
         "description": "Classic iPod-inspired UI demo.",
-        "image": "/Media/ipod.png",
+        "image": "./Media/ipod.png",
         "technologies": ["HTML", "CSS", "JS"],
         "liveUrl": "https://ipodenjoy.netlify.app/",
         "githubUrl": "https://ipodenjoy.netlify.app/"
@@ -144,7 +144,7 @@
         "id": 13,
         "title": "LearnEase",
         "description": "Learning portal demo for courses.",
-        "image": "/Media/Learnease.png",
+        "image": "./Media/Learnease.png",
         "technologies": ["React", "CSS"],
         "liveUrl": "https://main--learnease.netlify.app/",
         "githubUrl": "https://main--learnease.netlify.app/"
