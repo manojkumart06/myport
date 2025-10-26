@@ -7,8 +7,9 @@
     "bio": "Greetings! I'm Manoj, a dedicated Frontend Developer renowned for sculpting remarkable digital experiences. With an unwavering commitment to precision and a profound passion for unraveling complex challenges, I specialize in breathing life into websites and web applications by seamlessly blending artistic creativity with rock-solid technical prowess.",
     "avatar": "./Media/dp.png",
     "brands": [
-      { "name": "HustleAI" },
-      { "name": "KFC"}
+      { "name": "HustleAI", "url": "https://app.hustle.ai/" },
+      { "name": "KFC", "url": "https://kfcheroes.in/"},
+      { "name": "Raabta", "url": "https://raabta.blinkdigital.in/"}
     ],
     "skills": [
       { "name": "Python", "level": 55 },

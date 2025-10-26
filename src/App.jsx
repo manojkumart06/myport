@@ -84,9 +84,10 @@ const App = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
-    { type: 'bot', message: 'Hi! I\'m an AI assistant trained on this portfolio. Ask me anything about the owner\'s skills, experience, or projects!' }
+    { type: 'bot', message: 'Hi! I\'m an AI assistant trained on this portfolio. Ask me anything!' }
   ]);
   const [inputMessage, setInputMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef(null);
 
 // Projects row: translateX-based marquee (persist offset across renders)
@@ -133,28 +134,90 @@ const halfWidthRef = useRef(0);
 
   const getAIResponse = (message) => {
     const lowerMessage = message.toLowerCase();
-    if (lowerMessage.includes('skill') || lowerMessage.includes('technology') || lowerMessage.includes('tools')) {
-      return `Skills & tools: ${trainingData.skills}. Strong focus on React, Redux, and modern frontend engineering.`;
+
+    // Skills & Technologies
+    if (lowerMessage.includes('skill') || lowerMessage.includes('technology') || lowerMessage.includes('tech stack') || lowerMessage.includes('tools')) {
+      const skills = portfolioData.skills.slice(0, 5).map(s => `• ${s.name}`).join('\n');
+      const tools = portfolioData.tools.slice(0, 3).map(t => `• ${t.name}`).join('\n');
+      return `**Key Skills:**\n${skills}\n\n**Tools:**\n${tools}`;
     }
-    if (lowerMessage.includes('project')) return `Key projects: ${trainingData.projects}`;
-    if (lowerMessage.includes('experience') || lowerMessage.includes('work')) return `Professional experience: ${trainingData.experience}`;
-    if (lowerMessage.includes('contact') || lowerMessage.includes('hire') || lowerMessage.includes('email') || lowerMessage.includes('reach')) {
-      return `You can reach me at ${trainingData.contact}. Open to new opportunities and collaborations.`;
+
+    // Projects
+    if (lowerMessage.includes('project')) {
+      const projects = portfolioData.projects.slice(0, 3).map(p =>
+        `• **${p.title}**: ${p.description.substring(0, 80)}...`
+      ).join('\n');
+      return `**Featured Projects:**\n${projects}`;
     }
-    if (lowerMessage.includes('education') || lowerMessage.includes('study')) return `Education: ${trainingData.education}`;
-    if (lowerMessage.includes('who') || lowerMessage.includes('about')) {
-      return `${trainingData.personalInfo.name} is a ${trainingData.personalInfo.title} based in ${trainingData.personalInfo.location}. ${trainingData.personalInfo.bio}`;
+
+    // Experience & Work
+    if (lowerMessage.includes('experience') || lowerMessage.includes('work') || lowerMessage.includes('job')) {
+      const exp = portfolioData.experience.slice(0, 2).map(e =>
+        `• **${e.role}** at ${e.company} (${e.period})`
+      ).join('\n');
+      return `**Professional Experience:**\n${exp}`;
     }
-    return "Ask me about skills, projects, experience, education, or contact info. What would you like to know?";
+
+    // Contact & Hiring
+    if (lowerMessage.includes('contact') || lowerMessage.includes('hire') || lowerMessage.includes('email') || lowerMessage.includes('reach') || lowerMessage.includes('available')) {
+      return `**Contact Info:**\n• Email: ${portfolioData.email}\n• Phone: ${portfolioData.phone}\n• Location: ${portfolioData.location}\n\nOpen to new opportunities!`;
+    }
+
+    // Education
+    if (lowerMessage.includes('education') || lowerMessage.includes('study') || lowerMessage.includes('degree') || lowerMessage.includes('university')) {
+      const edu = portfolioData.education.map(e =>
+        `• **${e.degree}** - ${e.school} (${e.period})`
+      ).join('\n');
+      return `**Education:**\n${edu}`;
+    }
+
+    // About/Bio
+    if (lowerMessage.includes('who') || lowerMessage.includes('about') || lowerMessage.includes('introduce')) {
+      return `**About ${trainingData.personalInfo.name}:**\n• ${trainingData.personalInfo.title}\n• Based in ${trainingData.personalInfo.location}\n• ${trainingData.personalInfo.bio}`;
+    }
+
+    // Location
+    if (lowerMessage.includes('location') || lowerMessage.includes('where') || lowerMessage.includes('based')) {
+      return `**Location:** ${portfolioData.location}`;
+    }
+
+    // Interests/Focus
+    if (lowerMessage.includes('interest') || lowerMessage.includes('passion') || lowerMessage.includes('focus')) {
+      return `**Areas of Interest:**\n• Frontend Development\n• React & Redux\n• UI/UX Design\n• Web Performance\n• Modern JavaScript`;
+    }
+
+    // Greeting responses
+    if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+      return `Hello! I'm here to help. Ask me about:\n• Skills & technologies\n• Projects\n• Experience\n• Education\n• Contact info`;
+    }
+
+    // Default fallback
+    return "I can help with:\n• Skills & tools\n• Projects\n• Work experience\n• Education\n• Contact information\n\nWhat would you like to know?";
   };
 
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
+
     const userMessage = { type: 'user', message: inputMessage };
-    const botResponse = { type: 'bot', message: getAIResponse(inputMessage) };
-    setChatMessages(prev => [...prev, userMessage, botResponse]);
+    const currentInput = inputMessage;
+
+    // Add user message and show typing indicator
+    setChatMessages(prev => [...prev, userMessage]);
     setInputMessage('');
+    setIsTyping(true);
+
+    // Simulate thinking time (500ms - 1000ms)
+    setTimeout(() => {
+      const botResponse = { type: 'bot', message: getAIResponse(currentInput) };
+      setChatMessages(prev => [...prev, botResponse]);
+      setIsTyping(false);
+    }, 500 + Math.random() * 500);
   };
+
+  // Auto-scroll chat to bottom when new messages arrive
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages, isTyping]);
 
   useEffect(() => {
     const el = projectsContainerRef.current;
@@ -216,22 +279,30 @@ const halfWidthRef = useRef(0);
   return (
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark bg-gray-900' : 'bg-white'}`}>
       {/* Header */}
-      <header className={`fixed w-full z-50 transition-all duration-300 ${darkMode ? 'bg-gray-900/90' : 'bg-white/90'} backdrop-blur-sm border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+      <header className={`fixed w-full z-50 transition-all duration-300 ${darkMode ? 'bg-gray-900/90' : 'bg-white/90'} backdrop-blur-sm`}>
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <h1 className="text-4xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 bg-clip-text text-transparent drop-shadow-lg select-none">
-          MK
-        </h1>
+        <div className="flex items-center cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95" onClick={() => scrollToSection('home')}>
+          <img
+            src="./Media/mkLogo.png"
+            alt="MK Logo"
+            className="h-10 w-10 md:h-12 md:w-12 select-none drop-shadow-lg"
+            style={{ filter: 'brightness(0) saturate(100%) invert(47%) sepia(46%) saturate(1245%) hue-rotate(142deg) brightness(93%) contrast(92%)' }}
+          />
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-teal-600 via-cyan-500 to-teal-600 bg-clip-text text-transparent drop-shadow-lg select-none">
+            ManojKumar
+          </h1>
+        </div>
           
           <nav className="hidden md:flex space-x-8">
             {['Home', 'About', 'Projects', 'Experience', 'Education', 'Contact'].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} className={`hover:text-blue-600 transition-colors ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <a key={item} href={`#${item.toLowerCase()}`} className={`hover:text-teal-500 transition-all duration-200 active:scale-95 active:text-teal-600 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 {item}
               </a>
             ))}
           </nav>
 
           <div className="flex items-center space-x-4">
-            <button onClick={() => setDarkMode(!darkMode)} className={`p-2 rounded-lg cursor-pointer transition-colors ${darkMode ? 'bg-gray-700 text-yellow-400' : 'bg-gray-100 text-gray-600'}`}>
+            <button onClick={() => setDarkMode(!darkMode)} className={`p-2 rounded-lg cursor-pointer transition-colors ${darkMode ? 'bg-gray-700 text-cyan-400' : 'bg-gray-100 text-gray-600'}`}>
               {darkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className={`md:hidden p-2 rounded-lg cursor-pointer transition-colors ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-600'}`}>
@@ -241,10 +312,10 @@ const halfWidthRef = useRef(0);
         </div>
 
         {mobileMenuOpen && (
-          <div className={`md:hidden ${darkMode ? 'bg-gray-800' : 'bg-white'} border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+          <div className={`md:hidden ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <nav className="container mx-auto px-4 py-4 space-y-4">
               {['Home', 'About', 'Projects', 'Experience', 'Education', 'Contact'].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} className={`block hover:text-blue-600 transition-colors ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <a key={item} href={`#${item.toLowerCase()}`} className={`block hover:text-teal-500 transition-all duration-200 active:scale-95 active:text-teal-600 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   {item}
                 </a>
               ))}
@@ -280,7 +351,7 @@ const halfWidthRef = useRef(0);
               <h3 className={`text-2xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Skills</h3>
               <div className="space-y-4">
                 {(portfolioData.skills || []).map((s, i) => (
-                  <ProgressBar key={i} label={s.name} level={s.level} darkMode={darkMode} gradient="from-blue-600 to-purple-600" />
+                  <ProgressBar key={i} label={s.name} level={s.level} darkMode={darkMode} gradient="from-teal-600 to-cyan-500" />
                 ))}
               </div>
             </div>
@@ -288,7 +359,7 @@ const halfWidthRef = useRef(0);
               <h3 className={`text-2xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Tools & Frameworks</h3>
               <div className="space-y-4">
                 {(portfolioData.tools || []).map((t, i) => (
-                  <ProgressBar key={i} label={t.name} level={t.level} darkMode={darkMode} gradient="from-purple-600 to-blue-600" />
+                  <ProgressBar key={i} label={t.name} level={t.level} darkMode={darkMode} gradient="from-teal-600 to-cyan-500" />
                 ))}
               </div>
             </div>
@@ -334,7 +405,7 @@ const halfWidthRef = useRef(0);
                     rounded-xl overflow-hidden border
                     ${darkMode ? 'border-gray-700' : 'border-gray-200'}
                     cursor-pointer transform transition-all duration-300
-                    hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-teal-500`}
                 >
                   <img
                     src={proj.image}
@@ -352,7 +423,7 @@ const halfWidthRef = useRef(0);
                       {proj.technologies.map((t, i) => (
                         <span
                           key={i}
-                          className="px-2 py-0.5 text-xs rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                          className="px-2 py-0.5 text-xs rounded-full bg-gradient-to-r bg-[#0f9eb0] text-white"
                         >
                           {t}
                         </span>
@@ -403,7 +474,7 @@ const halfWidthRef = useRef(0);
                     rounded-xl overflow-hidden border
                     ${darkMode ? 'border-gray-700' : 'border-gray-200'}
                     cursor-pointer transform transition-all duration-300
-                    hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-teal-500`}
                 >
                   <img
                     src={proj.image}
@@ -421,7 +492,7 @@ const halfWidthRef = useRef(0);
                       {proj.technologies.map((t, i) => (
                         <span
                           key={i}
-                          className="px-2 py-0.5 text-xs rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                          className="px-2 py-0.5 text-xs rounded-full bg-gradient-to-r bg-[#0f9eb0] text-white"
                         >
                           {t}
                         </span>
@@ -470,7 +541,7 @@ const halfWidthRef = useRef(0);
               className="absolute left-0 -translate-x-1/2 z-10"
               style={{ top: expTraveler.topPx }}
             >
-              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+              <div className="w-8 h-8 rounded-full bg-[#0f9eb0] flex items-center justify-center shadow-lg">
                 <Plane size={20} className="text-white rotate-133"/>
               </div>
             </div>
@@ -478,13 +549,13 @@ const halfWidthRef = useRef(0);
             {portfolioData.experience.map((exp, index) => (
                 <div
                   key={index}
-                  data-timeline-item 
-                  className={`relative pl-8 pb-12 ${index !== portfolioData.experience.length - 1 ? 'border-l-2 border-dashed border-blue-600' : ''}`}
+                  data-timeline-item
+                  className={`relative pl-8 pb-12 ${index !== portfolioData.experience.length - 1 ? 'border-l-2 border-dashed border-teal-500' : ''}`}
                 >
-                  <div className="absolute left-0 -translate-x-1/2 w-4 h-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full" />
+                  <div className="absolute left-0 -translate-x-1/2 w-4 h-4 bg-[#0f9eb0] rounded-full" />
                   <div className={`${darkMode ? 'bg-gray-700' : 'bg-white'} rounded-lg p-6 shadow-lg ml-4`}>
                     <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{exp.role}</h3>
-                    <p className="text-blue-600 font-semibold mb-2">{exp.company}</p>
+                    <p className="text-teal-600 font-semibold mb-2">{exp.company}</p>
                     <p className={`text-sm mb-3 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{exp.period}</p>
                     <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{exp.description}</p>
                   </div>
@@ -504,17 +575,17 @@ const halfWidthRef = useRef(0);
               className="absolute left-0 -translate-x-1/2 z-10"
               style={{ top: eduTraveler.topPx }}
             >
-              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
+              <div className="w-8 h-8 rounded-full bg-[#0f9eb0] flex items-center justify-center shadow-lg">
                 <Car size={20} className="text-white rotate-90" />
               </div>
             </div>
 
             {portfolioData.education.map((ed, idx) => (
-              <div key={idx} data-timeline-item className={`relative pl-8 pb-12 ${idx !== portfolioData.education.length - 1 ? 'border-l-2 border-dashed border-purple-600' : ''}`}>
-                <div className="absolute left-0 -translate-x-1/2 w-4 h-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full" />
+              <div key={idx} data-timeline-item className={`relative pl-8 pb-12 ${idx !== portfolioData.education.length - 1 ? 'border-l-2 border-dashed border-teal-500' : ''}`}>
+                <div className="absolute left-0 -translate-x-1/2 w-4 h-4 bg-[#0f9eb0] rounded-full" />
                 <div className={`${darkMode ? 'bg-gray-700' : 'bg-white'} rounded-lg p-6 shadow-lg ml-4`}>
                   <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{ed.degree}</h3>
-                  <p className="text-purple-600 font-semibold mb-2">{ed.school}</p>
+                  <p className="text-teal-600 font-semibold mb-2">{ed.school}</p>
                   <p className={`text-sm mb-3 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{ed.period}</p>
                   <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{ed.description}</p>
                 </div>
@@ -529,55 +600,71 @@ const halfWidthRef = useRef(0);
         <div className="container mx-auto text-center">
           <div className="mb-12">
             <h2 className={`text-4xl md:text-5xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Get In Touch</h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto mb-6"></div>
+            <div className="w-20 h-1 bg-[#0f9eb0] mx-auto mb-6"></div>
             <p className={`text-lg ${darkMode ? 'text-gray-400' : 'text-gray-600'} max-w-2xl mx-auto`}>
-              Connecting the dots between creativity and communication—let’s collaborate and create something extraordinary.
+              Connecting the dots between creativity and communication—let's collaborate and create something extraordinary.
             </p>
           </div>
           <p className={`text-lg mb-8 max-w-2xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             I'm always open to discussing new opportunities, interesting projects, or just having a chat about technology and innovation.
           </p>
           <div className="flex justify-center space-x-8 flex-wrap gap-4">
-            <a href={`mailto:${portfolioData.email}`} className={`flex items-center px-8 py-4 ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-900'} rounded-lg hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:-translate-y-1`}>
+            <a href={`mailto:${portfolioData.email}`} className={`flex items-center px-8 py-4 ${darkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-900'} rounded-lg hover:bg-teal-600 hover:text-white transition-all duration-300 transform hover:-translate-y-1 active:scale-95`}>
               <Mail className="mr-3" size={20} /> {portfolioData.email}
             </a>
           </div>
           <div className="mt-10 flex justify-center gap-6">
-            <a href={portfolioData.socials.linkedin} target="_blank" rel="noreferrer" className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} hover:text-blue-600`}>LinkedIn</a>
-            <a href={portfolioData.socials.github} target="_blank" rel="noreferrer" className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} hover:text-blue-600`}>GitHub</a>
-            <a href={portfolioData.socials.stackoverflow} target="_blank" rel="noreferrer" className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} hover:text-blue-600`}>StackOverflow</a>
-            <a href={portfolioData.socials.quora} target="_blank" rel="noreferrer" className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} hover:text-blue-600`}>Quora</a>
+            <a href={portfolioData.socials.linkedin} target="_blank" rel="noreferrer" className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} hover:text-teal-500 transition-all duration-200 active:scale-90 active:text-teal-600`}>LinkedIn</a>
+            <a href={portfolioData.socials.github} target="_blank" rel="noreferrer" className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} hover:text-teal-500 transition-all duration-200 active:scale-90 active:text-teal-600`}>GitHub</a>
+            <a href={portfolioData.socials.stackoverflow} target="_blank" rel="noreferrer" className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} hover:text-teal-500 transition-all duration-200 active:scale-90 active:text-teal-600`}>StackOverflow</a>
+            <a href={portfolioData.socials.quora} target="_blank" rel="noreferrer" className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} hover:text-teal-500 transition-all duration-200 active:scale-90 active:text-teal-600`}>Quora</a>
           </div>
         </div>
       </section>
 
       {/* Chat Toggle */}
-      <button onClick={() => setChatOpen(!chatOpen)} className="fixed cursor-pointer bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 z-50">
+      <button onClick={() => setChatOpen(!chatOpen)} className="fixed cursor-pointer bottom-6 right-6 w-16 h-16 bg-[#0f9eb0] text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 active:scale-95 z-50">
         <MessageCircle size={24} className="mx-auto" />
       </button>
 
       {/* Chat */}
       {chatOpen && (
         <div className={`fixed bottom-24 right-6 w-80 md:w-96 h-96 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl z-50 flex flex-col`}>
-          <div className="p-4 border-b border-gray-200 dark:border-gray-600 rounded-t-2xl bg-gradient-to-r from-blue-600 to-purple-600">
+          <div className="p-4 border-b border-gray-200 dark:border-gray-600 rounded-t-2xl bg-[#0f9eb0]">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-white">AI Assistant</h3>
-              <button onClick={() => setChatOpen(false)} className="text-white cursor-pointer hover:text-gray-200"><X size={20} /></button>
+              <button onClick={() => setChatOpen(false)} className="text-white cursor-pointer hover:text-gray-200 active:scale-90 transition-transform"><X size={20} /></button>
             </div>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {chatMessages.map((msg, index) => (
               <div key={index} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`flex items-start space-x-2 max-w-xs ${msg.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                  <div className={`p-2 rounded-full ${msg.type === 'user' ? 'bg-blue-600' : 'bg-purple-600'}`}>
+                  <div className={`p-2 rounded-full ${msg.type === 'user' ? 'bg-teal-600' : 'bg-teal-500'}`}>
                     {msg.type === 'user' ? <User size={16} className="text-white" /> : <Bot size={16} className="text-white" />}
                   </div>
-                  <div className={`p-3 rounded-lg ${msg.type === 'user' ? 'bg-blue-600 text-white' : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-900'}`}>
-                    <p className="text-sm">{msg.message}</p>
+                  <div className={`p-3 rounded-lg ${msg.type === 'user' ? 'bg-teal-600 text-white' : darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-900'}`}>
+                    <p className="text-sm whitespace-pre-line">{msg.message}</p>
                   </div>
                 </div>
               </div>
             ))}
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="flex items-start space-x-2 max-w-xs">
+                  <div className="p-2 rounded-full bg-teal-500">
+                    <Bot size={16} className="text-white" />
+                  </div>
+                  <div className={`p-3 rounded-lg ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
             <div ref={chatEndRef} />
           </div>
           <div className="p-4 border-t border-gray-200 dark:border-gray-600">
@@ -588,9 +675,9 @@ const halfWidthRef = useRef(0);
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="Ask me anything..."
-                className={`flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+                className={`flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
               />
-              <button onClick={handleSendMessage} className="p-2 bg-gradient-to-r cursor-pointer from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all duration-300">
+              <button onClick={handleSendMessage} className="p-2 bg-[#0f9eb0] cursor-pointer text-white rounded-lg hover:shadow-lg transition-all duration-300 active:scale-95">
                 <Send size={16} />
               </button>
             </div>

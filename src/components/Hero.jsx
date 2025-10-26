@@ -29,7 +29,10 @@ const Hero = ({ darkMode }) => {
     }, []);
   
     return (
-      <div ref={rootRef} className="container mx-auto max-w-7x min-h-[calc(90svh-64px)] flex items-center">
+      <div
+          ref={rootRef}
+          className="container mx-auto max-w-7xl min-h-[calc(90svh-64px)] flex items-center justify-center"
+        >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
   
           {/* LEFT: Headline */}
@@ -37,8 +40,8 @@ const Hero = ({ darkMode }) => {
             <div
               data-badge
               className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold
-                         bg-gradient-to-r from-blue-500/15 to-purple-500/15
-                         ring-1 ring-blue-500/30 text-blue-700 dark:text-blue-300"
+                         bg-gradient-to-r from-teal-500/15 to-cyan-500/15
+                         ring-1 ring-teal-500/30 text-teal-700 dark:text-teal-300"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400" />
               Available for new opportunities
@@ -46,7 +49,7 @@ const Hero = ({ darkMode }) => {
   
             <h1 className={`mt-4 leading-[0.9] font-extrabold tracking-tight
                             ${darkMode ? "text-white" : "text-gray-900"}`}>
-              <span data-h1-line className="block text-5xl md:text-7xl">Hi, I’m a</span>
+              <span data-h1-line className="block text-5xl md:text-7xl">Hi, I'm a</span>
               <span data-h1-line className="block text-5xl md:text-7xl">Frontend</span>
               <span data-h1-line className="block text-5xl md:text-7xl">
                 <span className="animated-gradient-text">developer</span>
@@ -58,7 +61,7 @@ const Hero = ({ darkMode }) => {
                 data-sub
                 className={`mt-5 max-w-xl text-base md:text-lg ${darkMode ? "text-gray-300" : "text-gray-600"}`}
                 >
-                I have 3.5+ years of experience as a dedicated Frontend Developer, sculpting remarkable digital experiences with precision and a deep passion for unraveling complex challenges.
+                I have 3.8+ years of experience as a dedicated Frontend Developer, sculpting remarkable digital experiences with precision and a deep passion for unraveling complex challenges.
             </p>
           </div>
   
@@ -86,7 +89,7 @@ const Hero = ({ darkMode }) => {
             <div className="mt-3 flex items-center justify-between">
               <span
                 className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] px-2 py-1 rounded-full
-                           bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                           bg-gradient-to-r from-[#22a096] via-[#29a8b6] to-[#41d8e0] text-white"
               >
                 <FaReact size={11} className="mr-1" />
                 REACT SPECIALIST
@@ -116,18 +119,21 @@ const Hero = ({ darkMode }) => {
             data-float="b"
             className="absolute -bottom-20 sm:-bottom-16 left-0 right-0 mx-auto
                        w-[92%] xs:w-[88%] sm:w-[75%] rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 shadow-xl
-                       bg-gradient-to-r from-blue-600 to-purple-600 text-white text-[11px] sm:text-sm"
+                       bg-[#0f9eb0] text-white text-[11px] sm:text-sm"
           >
             <p className="opacity-90 truncate">The most recent projects I happily worked with ✨</p>
             <div className="mt-1.5 sm:mt-2 flex flex-wrap gap-1.5 sm:gap-2 items-center">
               {(portfolioData.brands || []).map((b, i) => (
-                <span
+                <a
                   key={i}
-                  className="px-2 py-1 rounded-full bg-white/15 max-w-[45%] sm:max-w-none truncate"
+                  href={b.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-2 py-1 rounded-full bg-white/15 max-w-[45%] sm:max-w-none truncate hover:bg-white/30 transition-all hover:scale-105 cursor-pointer"
                   title={b.name}
                 >
                   {b.name}
-                </span>
+                </a>
               ))}
             </div>
           </div>
