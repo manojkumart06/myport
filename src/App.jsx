@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Moon, Sun, Menu, X, Github, Linkedin, Mail, ExternalLink, 
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import {
+  Moon, Sun, Menu, X, Github, Linkedin, Mail, ExternalLink,
   MessageCircle, Send, User, Bot, ChevronLeft, ChevronRight,
   MapPin, Plane, Car
 } from 'lucide-react';
@@ -95,7 +95,6 @@ const projectsContainerRef = useRef(null); // viewport
 const projectsStripRef = useRef(null);     // moving strip
 
 const [projectsInView, setProjectsInView] = useState(false);
-const [projectsHover, setProjectsHover] = useState(false); // UI only
 
 // Refs that drive animation logic (don't trigger re-renders)
 const hoverRef = useRef(false);
@@ -113,8 +112,8 @@ const halfWidthRef = useRef(0);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  // AI Training Data (auto-built from real data)
-  const trainingData = {
+  // AI Training Data (auto-built from real data) - Memoized to prevent recalculation on every render
+  const trainingData = useMemo(() => ({
     personalInfo: {
       name: portfolioData.name,
       title: portfolioData.title,
@@ -130,9 +129,9 @@ const halfWidthRef = useRef(0);
     education: portfolioData.education.map(ed => `${ed.degree} at ${ed.school} (${ed.period})`).join('; '),
     interests: "Frontend, React, Redux, UI/UX, Web Performance",
     contact: `Email: ${portfolioData.email}, Phone: ${portfolioData.phone}`
-  };
+  }), []);
 
-  const getAIResponse = (message) => {
+  const getAIResponse = useCallback((message) => {
     const lowerMessage = message.toLowerCase();
 
     // Skills & Technologies
@@ -193,7 +192,7 @@ const halfWidthRef = useRef(0);
 
     // Default fallback
     return "I can help with:\n• Skills & tools\n• Projects\n• Work experience\n• Education\n• Contact information\n\nWhat would you like to know?";
-  };
+  }, [trainingData.personalInfo]);
 
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
@@ -383,10 +382,10 @@ const halfWidthRef = useRef(0);
           <div
             ref={projectsStripRef}
             className="flex gap-6 px-4 md:px-8 will-change-transform"
-            onMouseEnter={() => { setProjectsHover(true); hoverRef.current = true; }}
-            onMouseLeave={() => { setProjectsHover(false); hoverRef.current = false; }}
-            onTouchStart={() => { setProjectsHover(true); hoverRef.current = true; }}
-            onTouchEnd={() => { setProjectsHover(false); hoverRef.current = false; }}
+            onMouseEnter={() => { hoverRef.current = true; }}
+            onMouseLeave={() => { hoverRef.current = false; }}
+            onTouchStart={() => { hoverRef.current = true; }}
+            onTouchEnd={() => { hoverRef.current = false; }}
             style={{ transform: 'translateX(0px)' }}
           >
             {/* First copy */}

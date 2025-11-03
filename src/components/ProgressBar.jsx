@@ -61,4 +61,4 @@ const ProgressBar = ({
   );
 };
 
-export default ProgressBar;
+export default React.memo(ProgressBar);

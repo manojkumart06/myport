@@ -1,30 +1,57 @@
 import { gsap } from "gsap";
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef, useEffect, useState } from "react";
 import { FaEnvelope, FaGithub, FaInstagram, FaLinkedin, FaReact } from "react-icons/fa";
 import portfolioData from "../data/portfolioData";
 
 const Hero = ({ darkMode }) => {
     const rootRef = useRef(null);
-  
+    const floatingAnimsRef = useRef([]);
+    const [isInView, setIsInView] = useState(true);
+
+    // Pause/resume floating animations based on visibility
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          setIsInView(entry.isIntersecting);
+          floatingAnimsRef.current.forEach((anim) => {
+            if (entry.isIntersecting) {
+              anim.play();
+            } else {
+              anim.pause();
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      if (rootRef.current) {
+        observer.observe(rootRef.current);
+      }
+
+      return () => observer.disconnect();
+    }, []);
+
     useLayoutEffect(() => {
       const ctx = gsap.context(() => {
         // pop in the badge, headline lines, subtext, buttons, cards & photo
         gsap.set("[data-float]", { y: 0 });
         const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-  
+
         tl.from("[data-badge]", { y: -12, opacity: 0, duration: 0.4 })
           .from("[data-h1-line]", { y: 40, opacity: 0, stagger: 0.06, duration: 0.6 }, "-=0.1")
           .from("[data-sub]", { y: 16, opacity: 0, duration: 0.5 }, "-=0.2")
           .from("[data-cta]", { y: 16, opacity: 0, stagger: 0.05, duration: 0.45 }, "-=0.25")
           .from("[data-card]", { y: 32, opacity: 0, stagger: 0.08, duration: 0.55 }, "-=0.15")
           .from("[data-photo]", { scale: 0.92, opacity: 0, duration: 0.6 }, "-=0.4");
-  
-        // subtle floating for cards
-        gsap.to("[data-float='a']", { y: -8, repeat: -1, yoyo: true, duration: 2.2, ease: "sine.inOut" });
-        gsap.to("[data-float='b']", { y: -10, repeat: -1, yoyo: true, duration: 2.6, ease: "sine.inOut", delay: 0.2 });
-        gsap.to("[data-float='c']", { y: -7, repeat: -1, yoyo: true, duration: 2.0, ease: "sine.inOut", delay: 0.1 });
+
+        // subtle floating for cards - store refs to pause/resume
+        floatingAnimsRef.current = [
+          gsap.to("[data-float='a']", { y: -8, repeat: -1, yoyo: true, duration: 2.2, ease: "sine.inOut" }),
+          gsap.to("[data-float='b']", { y: -10, repeat: -1, yoyo: true, duration: 2.6, ease: "sine.inOut", delay: 0.2 }),
+          gsap.to("[data-float='c']", { y: -7, repeat: -1, yoyo: true, duration: 2.0, ease: "sine.inOut", delay: 0.1 })
+        ];
       }, rootRef);
-  
+
       return () => ctx.revert();
     }, []);
   
@@ -81,10 +108,12 @@ const Hero = ({ darkMode }) => {
             <p className={`text-[11px] ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
               {portfolioData.location}
             </p>
+            {/* WARNING: bg-img-portfolio.jpg is 12MB! Compress to <300KB for better performance */}
             <img
               src="./Media/bg-img-portfolio.jpg"
               alt="Project Preview"
               className="mt-3 h-20 sm:h-36 w-full object-cover rounded-lg"
+              loading="lazy"
             />
             <div className="mt-3 flex items-center justify-between">
               <span
@@ -109,7 +138,7 @@ const Hero = ({ darkMode }) => {
               src={portfolioData.avatar}
               alt="Profile"
               className="w-full h-full object-cover"
-              loading="eager"
+              loading="lazy"
             />
           </div>
 
@@ -189,6 +218,5 @@ const Hero = ({ darkMode }) => {
       </div>
     );
 };
-  
 
-export default Hero;
+export default React.memo(Hero);
