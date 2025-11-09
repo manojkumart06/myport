@@ -9,27 +9,27 @@
     "brands": [
       { "name": "HustleAI", "url": "https://app.hustle.ai/" },
       { "name": "KFC", "url": "https://kfcheroes.in/"},
-      { "name": "Raabta", "url": "https://raabta.blinkdigital.in/"}
+      { "name": "Raabta", "url": "https://raabta.blinkdigital.in/"},
+      { "name": "Rexona", "url": "https://unileverfootballcontest.com/"}
     ],
     "skills": [
-      { "name": "Python", "level": 55 },
       { "name": "HTML", "level": 85 },
       { "name": "CSS", "level": 85 },
-      { "name": "Javascript", "level": 55 },
+      { "name": "Javascript", "level": 70 },
       { "name": "NodeJs", "level": 55 },
+      { "name": "Python", "level": 55 },
       { "name": "C", "level": 85 },
       { "name": "Datastructures", "level": 55 },
-      { "name": "MongoDB", "level": 85 },
-      { "name": "SQL", "level": 85 }
+      { "name": "MongoDB", "level": 85 }
     ],
     "tools": [
-      { "name": "Bootstrap", "level": 70 },
       { "name": "React", "level": 85 },
       { "name": "Redux", "level": 85 },
-      { "name": "ExpressJS", "level": 65 },
+      { "name": "Tailwind CSS", "level": 70 },
+      { "name": "Chakra UI", "level": 80 },
+      { "name": "Generative AI tools", "level": 65 },
       { "name": "Git", "level": 75 },
-      { "name": "Github", "level": 65 },
-      { "name": "VSCode", "level": 75 },
+      { "name": "Github", "level": 70 },
       { "name": "Jira", "level": 85 }
     ],
     "projects": [
@@ -176,7 +176,7 @@
         "degree": "B.E (Computer Science)",
         "school": "VTU (City Engineering College)",
         "period": "2017 - 2021",
-        "description": "Bachelor of Engineering in Computer Science; strong foundation in computer science and technology."
+        "description": "Bachelor of Engineering in Computer Science; Relevant Coursework: Object Oriented Programming, Databases, Data Structures and Algorithms, Operating Systems, Computer Networks, Machine Learning, Image Processing."
       },
       {
         "degree": "PUC",

@@ -1,86 +1,21 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import {
-  Moon, Sun, Menu, X, Github, Linkedin, Mail, ExternalLink,
+  Moon, Sun, Menu, X, Mail,
   MessageCircle, Send, User, Bot, ChevronLeft, ChevronRight,
-  MapPin, Plane, Car
+  MapPin
 } from 'lucide-react';
 import portfolioData from './data/portfolioData.json';
 import ProgressBar from './components/ProgressBar';
 import Hero from './components/Hero';
-
-/** Hook to compute traveler top position along a section's height */
-const useTraveler = () => {
-  const containerRef = useRef(null);
-  const [topPx, setTopPx] = useState(0);
-
-  useEffect(() => {
-    let rafId = null;
-    const ICON_SIZE = 24; // plane size (w-6 h-6)
-    const DOT_SIZE = 16;  // dot size (w-4 h-4)
-    const ICON_RADIUS = ICON_SIZE / 2;
-
-    const calc = () => {
-      const el = containerRef.current;
-      if (!el) return;
-
-      const rect = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-
-      // Progress driven by viewport center crossing the container
-      // 0 when viewport center at container top, 1 at container bottom
-      const progress = Math.min(Math.max((vh / 2 - rect.top) / rect.height, 0), 1);
-
-      // Find first & last items to define the line segment
-      const items = el.querySelectorAll('[data-timeline-item]');
-      if (!items.length) return;
-
-      const first = items[0];
-      const last = items[items.length - 1];
-
-      const firstDotCenter = first.offsetTop + DOT_SIZE / 2;
-      const lastDotCenter = last.offsetTop + DOT_SIZE / 2;
-
-      const trackLength = Math.max(lastDotCenter - firstDotCenter, 0);
-
-      // Plane center along the track, then convert to "top" for absolute element
-      const planeCenter = firstDotCenter + progress * trackLength;
-      const planeTop = Math.max(planeCenter - ICON_RADIUS, 0);
-
-      setTopPx(planeTop);
-    };
-
-    const onScrollOrResize = () => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => {
-        rafId = null;
-        calc();
-      });
-    };
-
-    // Initial + listeners
-    calc();
-    window.addEventListener('scroll', onScrollOrResize, { passive: true });
-    window.addEventListener('resize', onScrollOrResize);
-
-    // Recalculate if the container size/content changes
-    const ro = new ResizeObserver(() => onScrollOrResize());
-    if (containerRef.current) ro.observe(containerRef.current);
-
-    return () => {
-      window.removeEventListener('scroll', onScrollOrResize);
-      window.removeEventListener('resize', onScrollOrResize);
-      if (rafId) cancelAnimationFrame(rafId);
-      ro.disconnect();
-    };
-  }, []);
-
-  return { containerRef, topPx };
-};
-
-
+import AnimatedGradient from './components/AnimatedGradient';
+import ParticleBackground from './components/ParticleBackground';
+import GridBackground from './components/GridBackground';
+import WaveBackground from './components/WaveBackground';
+import GeometricBackground from './components/GeometricBackground';
+import FloatingLights from './components/FloatingLights';
 
 const App = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
@@ -89,6 +24,7 @@ const App = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef(null);
+  
 
 // Projects row: translateX-based marquee (persist offset across renders)
 const projectsContainerRef = useRef(null); // viewport
@@ -100,12 +36,6 @@ const [projectsInView, setProjectsInView] = useState(false);
 const hoverRef = useRef(false);
 const offsetRef = useRef(0);
 const halfWidthRef = useRef(0);
-
-
-
-  // traveler hooks for Experience and Education sections
-  const expTraveler = useTraveler();
-  const eduTraveler = useTraveler();
 
   const scrollToSection = (id) => {
     const el = document.getElementById(id);
@@ -218,6 +148,28 @@ const halfWidthRef = useRef(0);
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages, isTyping]);
 
+  // Scroll animation for cards
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove('opacity-0', 'translate-y-8');
+          entry.target.classList.add('opacity-100', 'translate-y-0');
+        }
+      });
+    }, observerOptions);
+
+    const animatedElements = document.querySelectorAll('[data-animate="scroll"]');
+    animatedElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     const el = projectsContainerRef.current;
     if (!el) return;
@@ -324,13 +276,17 @@ const halfWidthRef = useRef(0);
       </header>
 
       {/* Hero */}
-      <section id="home" className="pt-20 pb-16 px-4">
-        <Hero darkMode={darkMode}/>
+      <section id="home" className="relative pt-20 pb-16 px-4 overflow-hidden">
+        <ParticleBackground darkMode={darkMode} particleCount={60} />
+        <div className="relative z-10">
+          <Hero darkMode={darkMode}/>
+        </div>
       </section>
 
       {/* About (skills + tools separated, animated) */}
-      <section id="about" className={`py-20 px-4 ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
-        <div className="container mx-auto">
+      <section id="about" className={`relative py-20 px-4 overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
+        <GridBackground darkMode={darkMode} />
+        <div className="container mx-auto relative z-10">
           <h2 className={`text-4xl font-bold text-center mb-12 ${darkMode ? 'text-white' : 'text-gray-900'}`}>About Me</h2>
           <div className="grid lg:grid-cols-3 gap-12 items-start">
             <div className="lg:col-span-1">
@@ -367,17 +323,19 @@ const halfWidthRef = useRef(0);
       </section>
 
       {/* Projects */}
-      <section id="projects" className="py-20">
-        <h2 className={`text-4xl font-bold text-center mb-12 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-          Featured Projects
-        </h2>
+      <section id="projects" className="relative py-30 overflow-hidden">
+        <WaveBackground darkMode={darkMode} />
+        <div className="relative z-10">
+          <h2 className={`text-4xl font-bold text-center mb-12 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+            Featured Projects
+          </h2>
 
-        {/* Viewport: full width, no bg */}
-        <div
-          ref={projectsContainerRef}
-          className="w-full overflow-hidden"
-          aria-label="Featured Projects Marquee"
-        >
+          {/* Viewport: full width, no bg */}
+          <div
+            ref={projectsContainerRef}
+            className="w-full overflow-hidden"
+            aria-label="Featured Projects Marquee"
+          >
           {/* Moving strip */}
           <div
             ref={projectsStripRef}
@@ -526,37 +484,84 @@ const halfWidthRef = useRef(0);
               </div>
             ))}
           </div>
+          </div>
         </div>
       </section>
 
 
-      {/* Experience with traveler (plane) */}
-      <section id="experience" className={`py-20 px-4 ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
-        <div className="container mx-auto">
+      {/* Experience */}
+      <section id="experience" className={`relative py-20 px-4 overflow-x-hidden ${darkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
+        <FloatingLights darkMode={darkMode} />
+        <div className="container mx-auto relative z-10">
           <h2 className={`text-4xl font-bold text-center mb-12 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Experience</h2>
-          <div ref={expTraveler.containerRef} className="relative max-w-3xl mx-auto">
-            {/* traveler icon */}
-            <div
-              className="absolute left-0 -translate-x-1/2 z-10"
-              style={{ top: expTraveler.topPx }}
-            >
-              <div className="w-8 h-8 rounded-full bg-[#0f9eb0] flex items-center justify-center shadow-lg">
-                <Plane size={20} className="text-white rotate-133"/>
-              </div>
-            </div>
-
+          <div className="relative max-w-3xl mx-auto px-4 sm:px-0">
             {portfolioData.experience.map((exp, index) => (
                 <div
                   key={index}
                   data-timeline-item
-                  className={`relative pl-8 pb-12 ${index !== portfolioData.experience.length - 1 ? 'border-l-2 border-dashed border-teal-500' : ''}`}
+                  className="relative pb-12 opacity-0 translate-y-8 transition-all duration-700 ease-out"
+                  data-animate="scroll"
                 >
-                  <div className="absolute left-0 -translate-x-1/2 w-4 h-4 bg-[#0f9eb0] rounded-full" />
-                  <div className={`${darkMode ? 'bg-gray-700' : 'bg-white'} rounded-lg p-6 shadow-lg ml-4`}>
-                    <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{exp.role}</h3>
-                    <p className="text-teal-600 font-semibold mb-2">{exp.company}</p>
-                    <p className={`text-sm mb-3 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{exp.period}</p>
-                    <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{exp.description}</p>
+                  {/* Enhanced Card */}
+                  <div className={`group relative rounded-xl p-4 sm:p-6 transition-all duration-300
+                    ${darkMode
+                      ? 'bg-gradient-to-br from-gray-700 via-gray-700 to-gray-800 hover:from-gray-600 hover:via-gray-700 hover:to-gray-800'
+                      : 'bg-gradient-to-br from-white via-white to-gray-50 hover:from-white hover:via-gray-50 hover:to-white'
+                    }
+                    shadow-[0_4px_20px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_30px_rgba(15,158,176,0.3)]
+                    border ${darkMode ? 'border-gray-600 hover:border-teal-500/50' : 'border-gray-200 hover:border-teal-500/30'}
+                    hover:-translate-y-2 hover:scale-[1.02] cursor-pointer
+                    backdrop-blur-sm`}
+                  >
+                    {/* Shine effect on hover */}
+                    <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                      bg-gradient-to-r from-transparent via-teal-500/5 to-transparent
+                      group-hover:animate-[shimmer_2s_ease-in-out_infinite]"
+                    />
+
+                    {/* Top accent bar */}
+                    <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 rounded-t-xl
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    />
+
+                    {/* Content */}
+                    <div className="relative z-10">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+                        <h3 className={`text-lg sm:text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}
+                          group-hover:text-teal-500 transition-colors duration-300`}>
+                          {exp.role}
+                        </h3>
+                        {/* Badge */}
+                        <span className={`px-3 py-1 text-xs font-semibold rounded-full w-fit
+                          ${darkMode ? 'bg-teal-500/20 text-teal-400' : 'bg-teal-50 text-teal-600'}
+                          border ${darkMode ? 'border-teal-500/30' : 'border-teal-200'}`}>
+                          Professional
+                        </span>
+                      </div>
+
+                      <p className="text-teal-600 dark:text-teal-400 font-semibold mb-2 flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clipRule="evenodd" />
+                        </svg>
+                        {exp.company}
+                      </p>
+
+                      <p className={`text-sm mb-4 flex items-center gap-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                        </svg>
+                        {exp.period}
+                      </p>
+
+                      <p className={`leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        {exp.description}
+                      </p>
+                    </div>
+
+                    {/* Bottom gradient reflection */}
+                    <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-500/50 to-transparent
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    />
                   </div>
                 </div>
               ))}
@@ -564,29 +569,79 @@ const halfWidthRef = useRef(0);
         </div>
       </section>
 
-      {/* Education with traveler (car) */}
-      <section id="education" className="py-20 px-4">
-        <div className="container mx-auto">
+      {/* Education */}
+      <section id="education" className="relative py-20 px-4 overflow-x-hidden">
+        <GeometricBackground darkMode={darkMode} />
+        <div className="container mx-auto relative z-10">
           <h2 className={`text-4xl font-bold text-center mb-12 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Education</h2>
-          <div ref={eduTraveler.containerRef} className="relative max-w-3xl mx-auto">
-            {/* traveler icon */}
-            <div
-              className="absolute left-0 -translate-x-1/2 z-10"
-              style={{ top: eduTraveler.topPx }}
-            >
-              <div className="w-8 h-8 rounded-full bg-[#0f9eb0] flex items-center justify-center shadow-lg">
-                <Car size={20} className="text-white rotate-90" />
-              </div>
-            </div>
-
+          <div className="relative max-w-3xl mx-auto px-4 sm:px-0">
             {portfolioData.education.map((ed, idx) => (
-              <div key={idx} data-timeline-item className={`relative pl-8 pb-12 ${idx !== portfolioData.education.length - 1 ? 'border-l-2 border-dashed border-teal-500' : ''}`}>
-                <div className="absolute left-0 -translate-x-1/2 w-4 h-4 bg-[#0f9eb0] rounded-full" />
-                <div className={`${darkMode ? 'bg-gray-700' : 'bg-white'} rounded-lg p-6 shadow-lg ml-4`}>
-                  <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{ed.degree}</h3>
-                  <p className="text-teal-600 font-semibold mb-2">{ed.school}</p>
-                  <p className={`text-sm mb-3 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{ed.period}</p>
-                  <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{ed.description}</p>
+              <div
+                key={idx}
+                data-timeline-item
+                className="relative pb-12 opacity-0 translate-y-8 transition-all duration-700 ease-out"
+                data-animate="scroll"
+              >
+                {/* Enhanced Card */}
+                <div className={`group relative rounded-xl p-4 sm:p-6 transition-all duration-300
+                  ${darkMode
+                    ? 'bg-gradient-to-br from-gray-700 via-gray-700 to-gray-800 hover:from-gray-600 hover:via-gray-700 hover:to-gray-800'
+                    : 'bg-gradient-to-br from-white via-white to-gray-50 hover:from-white hover:via-gray-50 hover:to-white'
+                  }
+                  shadow-[0_4px_20px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_30px_rgba(15,158,176,0.3)]
+                  border ${darkMode ? 'border-gray-600 hover:border-teal-500/50' : 'border-gray-200 hover:border-teal-500/30'}
+                  hover:-translate-y-2 hover:scale-[1.02] cursor-pointer
+                  backdrop-blur-sm`}
+                >
+                  {/* Shine effect on hover */}
+                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                    bg-gradient-to-r from-transparent via-teal-500/5 to-transparent
+                    group-hover:animate-[shimmer_2s_ease-in-out_infinite]"
+                  />
+
+                  {/* Top accent bar */}
+                  <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 rounded-t-xl
+                    opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  />
+
+                  {/* Content */}
+                  <div className="relative z-10">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+                      <h3 className={`text-lg sm:text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}
+                        group-hover:text-teal-500 transition-colors duration-300`}>
+                        {ed.degree}
+                      </h3>
+                      {/* Badge */}
+                      <span className={`px-3 py-1 text-xs font-semibold rounded-full w-fit
+                        ${darkMode ? 'bg-purple-500/20 text-purple-400' : 'bg-purple-50 text-purple-600'}
+                        border ${darkMode ? 'border-purple-500/30' : 'border-purple-200'}`}>
+                        Academic
+                      </span>
+                    </div>
+
+                    <p className="text-teal-600 dark:text-teal-400 font-semibold mb-2 flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                      </svg>
+                      {ed.school}
+                    </p>
+
+                    <p className={`text-sm mb-4 flex items-center gap-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                      </svg>
+                      {ed.period}
+                    </p>
+
+                    <p className={`leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                      {ed.description}
+                    </p>
+                  </div>
+
+                  {/* Bottom gradient reflection */}
+                  <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-teal-500/50 to-transparent
+                    opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  />
                 </div>
               </div>
             ))}
@@ -595,8 +650,13 @@ const halfWidthRef = useRef(0);
       </section>
 
       {/* Contact */}
-      <section id="contact" className="py-16 px-4">
-        <div className="container mx-auto text-center">
+      <section id="contact" className="relative py-16 px-4 overflow-hidden">
+        <AnimatedGradient darkMode={darkMode} colors={[
+          { r: 15, g: 158, b: 176, a: 0.2 },
+          { r: 139, g: 92, b: 246, a: 0.2 },
+          { r: 236, g: 72, b: 153, a: 0.2 }
+        ]} />
+        <div className="container mx-auto text-center relative z-10">
           <div className="mb-12">
             <h2 className={`text-4xl md:text-5xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Get In Touch</h2>
             <div className="w-20 h-1 bg-[#0f9eb0] mx-auto mb-6"></div>
@@ -685,9 +745,17 @@ const halfWidthRef = useRef(0);
       )}
 
       {/* Footer */}
-      <footer className={`py-8 px-4 ${darkMode ? 'bg-gray-800 border-t border-gray-700' : 'bg-gray-50 border-t border-gray-200'}`}>
-        <div className="container mx-auto text-center">
-          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>© {new Date().getFullYear()} {portfolioData.name}</p>
+      <footer className={`relative py-4 px-4 overflow-hidden ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-teal-500/10 via-transparent to-cyan-500/10 pointer-events-none" />
+
+        <div className="container mx-auto relative z-10">
+          <div className="flex flex-col items-center justify-center space-y-3">
+            {/* Copyright */}
+            <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>
+              © {new Date().getFullYear()} {portfolioData.name}.
+            </p>
+          </div>
         </div>
       </footer>
     </div>

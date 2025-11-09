@@ -66,11 +66,13 @@ const Hero = ({ darkMode }) => {
           <div>
             <div
               data-badge
-              className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold
-                         bg-gradient-to-r from-teal-500/15 to-cyan-500/15
-                         ring-1 ring-teal-500/30 text-teal-700 dark:text-teal-300"
+              className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold
+                         bg-gradient-to-r ring-1
+                         ${darkMode
+                           ? "from-teal-500/20 to-cyan-500/20 ring-teal-500/40 text-teal-300"
+                           : "from-teal-500/15 to-cyan-500/15 ring-teal-500/30 text-teal-700"}`}
             >
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className={`w-2 h-2 rounded-full ${darkMode ? "bg-emerald-400" : "bg-emerald-500"}`} />
               Available for new opportunities
             </div>
   
@@ -98,7 +100,7 @@ const Hero = ({ darkMode }) => {
           <div
             data-card
             data-float="a"
-            className={`absolute sm:-top-20 sm:-left-6 -top-6 left-0 w-48 xs:w-56 sm:w-72 rounded-2xl p-3 sm:p-4 shadow-xl border
+            className={`absolute sm:-top-20 sm:-left-6 -top-8 left-0 w-40 xs:w-56 sm:w-72 rounded-2xl p-3 sm:p-4 shadow-xl border
                         ${darkMode ? "bg-gray-800/80 border-gray-700" : "bg-white/80 backdrop-blur border-gray-200"}
                         max-sm:-translate-x-2`}
           >
@@ -130,7 +132,7 @@ const Hero = ({ darkMode }) => {
           <div
             data-photo
             className={`relative ml-auto mr-8 lg:mr-6 mb-8
-                        w-[150px] h-[170px] xs:w-[170px] xs:h-[190px] sm:w-[280px] sm:h-[260px]
+                        w-[150px] h-[170px] xs:w-[170px] xs:h-[190px] sm:w-[260px] sm:h-[260px]
                         rounded-2xl overflow-hidden shadow-2xl
                         ${darkMode ? "ring-1 ring-gray-700" : "ring-1 ring-gray-200"}`}
           >
@@ -146,11 +148,14 @@ const Hero = ({ darkMode }) => {
           <div
             data-card
             data-float="b"
-            className="absolute -bottom-20 sm:-bottom-16 left-0 right-0 mx-auto
-                       w-[92%] xs:w-[88%] sm:w-[75%] rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 shadow-xl
-                       bg-[#0f9eb0] text-white text-[11px] sm:text-sm"
+            className={`absolute -bottom-12 sm:-bottom-16 left-0 right-0 mx-auto
+                       w-[92%] xs:w-[88%] sm:w-[75%] rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 shadow-xl border
+                       ${darkMode ? "bg-gray-800/80 border-gray-700" : "bg-white/80 backdrop-blur border-gray-200"}
+                       text-[11px] sm:text-sm`}
           >
-            <p className="opacity-90 truncate">The most recent projects I happily worked with ✨</p>
+            <p className={`opacity-90 truncate ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+              The most recent projects I happily worked with ✨
+            </p>
             <div className="mt-1.5 sm:mt-2 flex flex-wrap gap-1.5 sm:gap-2 items-center">
               {(portfolioData.brands || []).map((b, i) => (
                 <a
@@ -158,7 +163,11 @@ const Hero = ({ darkMode }) => {
                   href={b.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-2 py-1 rounded-full bg-white/15 max-w-[45%] sm:max-w-none truncate hover:bg-white/30 transition-all hover:scale-105 cursor-pointer"
+                  className="px-2 py-1 rounded-full max-w-[45%] sm:max-w-none truncate cursor-pointer
+                             bg-gradient-to-r from-[#22a096] via-[#29a8b6] to-[#41d8e0] text-white
+                             transition-all duration-300 ease-out
+                             hover:-translate-y-1 hover:scale-105 hover:shadow-lg
+                             active:translate-y-0 active:scale-100"
                   title={b.name}
                 >
                   {b.name}
