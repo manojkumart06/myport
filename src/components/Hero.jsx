@@ -1,3 +1,5 @@
+
+
 import { gsap } from "gsap";
 import React, { useLayoutEffect, useRef, useEffect, useState } from "react";
 import { FaEnvelope, FaGithub, FaInstagram, FaLinkedin, FaReact } from "react-icons/fa";
@@ -6,7 +8,19 @@ import portfolioData from "../data/portfolioData";
 const Hero = ({ darkMode }) => {
     const rootRef = useRef(null);
     const floatingAnimsRef = useRef([]);
+    const clockHandRef = useRef(null);
     const [isInView, setIsInView] = useState(true);
+    const [isSmallScreen, setIsSmallScreen] = useState(typeof window !== 'undefined' && window.innerWidth < 640);
+
+    // Handle window resize for responsive clock hand
+    useEffect(() => {
+      const handleResize = () => {
+        setIsSmallScreen(window.innerWidth < 640);
+      };
+
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Pause/resume floating animations based on visibility
     useEffect(() => {
@@ -32,35 +46,89 @@ const Hero = ({ darkMode }) => {
     }, []);
 
     useLayoutEffect(() => {
+      // Clear previous animations
+      floatingAnimsRef.current = [];
+
       const ctx = gsap.context(() => {
+        // Set initial states
+        gsap.set("[data-card]", { scale: 1, opacity: 1 });
+
         // pop in the badge, headline lines, subtext, buttons, cards & photo
-        gsap.set("[data-float]", { y: 0 });
         const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
         tl.from("[data-badge]", { y: -12, opacity: 0, duration: 0.4 })
           .from("[data-h1-line]", { y: 40, opacity: 0, stagger: 0.06, duration: 0.6 }, "-=0.1")
           .from("[data-sub]", { y: 16, opacity: 0, duration: 0.5 }, "-=0.2")
           .from("[data-cta]", { y: 16, opacity: 0, stagger: 0.05, duration: 0.45 }, "-=0.25")
-          .from("[data-card]", { y: 32, opacity: 0, stagger: 0.08, duration: 0.55 }, "-=0.15")
+          .from("[data-clock]", { scale: 0.8, opacity: 0, duration: 0.8 }, "-=0.3")
+          .from("[data-card]", { scale: 0, opacity: 0, stagger: 0.1, duration: 0.5, clearProps: "all" }, "-=0.3")
           .from("[data-photo]", { scale: 0.92, opacity: 0, duration: 0.6 }, "-=0.4");
 
-        // subtle floating for cards - store refs to pause/resume
-        floatingAnimsRef.current = [
-          gsap.to("[data-float='a']", { y: -8, repeat: -1, yoyo: true, duration: 2.2, ease: "sine.inOut" }),
-          gsap.to("[data-float='b']", { y: -10, repeat: -1, yoyo: true, duration: 2.6, ease: "sine.inOut", delay: 0.2 }),
-          gsap.to("[data-float='c']", { y: -7, repeat: -1, yoyo: true, duration: 2.0, ease: "sine.inOut", delay: 0.1 })
+        // Clock hand animation with pauses at card positions
+        // Set initial rotation to 0
+        gsap.set(clockHandRef.current, { rotation: 0 });
+
+        const clockTimeline = gsap.timeline({
+          repeat: -1,
+          onRepeat: () => {
+            // Reset rotation to 0 at the start of each loop to prevent accumulation
+            gsap.set(clockHandRef.current, { rotation: 0 });
+          }
+        });
+
+        // Card positions: 12 o'clock (0°), 3 o'clock (90°), 9 o'clock (270°)
+        const cardAngles = [
+          { angle: 0, card: 'a' },
+          { angle: 90, card: 'b' },
+          { angle: 270, card: 'c' }
         ];
+
+        cardAngles.forEach(({ angle, card }) => {
+          // Rotate to position
+          clockTimeline.to(clockHandRef.current, {
+            rotation: angle,
+            duration: 2,
+            ease: "power2.inOut"
+          });
+
+          // Trigger highlight animation
+          clockTimeline.to(`[data-card-highlight="${card}"]`, {
+            scale: 1.1,
+            boxShadow: darkMode
+              ? "0 0 30px rgba(34, 211, 238, 0.6)"
+              : "0 0 30px rgba(20, 184, 166, 0.6)",
+            duration: 0.3,
+            yoyo: true,
+            repeat: 1
+          }, "-=0.1");
+
+          // Pause at position
+          clockTimeline.to({}, { duration: 1 });
+        });
+
+        // Complete the circle: smoothly rotate from 270° to 360° (back to start)
+        clockTimeline.to(clockHandRef.current, {
+          rotation: 360,
+          duration: 2,
+          ease: "power2.inOut"
+        });
+
+        floatingAnimsRef.current.push(clockTimeline);
+
       }, rootRef);
 
-      return () => ctx.revert();
-    }, []);
+      return () => {
+        ctx.revert();
+        floatingAnimsRef.current = [];
+      };
+    }, [darkMode]);
   
     return (
       <div
           ref={rootRef}
-          className="container mx-auto max-w-7xl min-h-[calc(90svh-64px)] flex items-center justify-center"
+          className="container mx-auto max-w-7xl min-h-[calc(90svh-64px)] flex items-center justify-center overflow-visible"
         >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center overflow-visible">
   
           {/* LEFT: Headline */}
           <div>
@@ -94,80 +162,131 @@ const Hero = ({ darkMode }) => {
             </p>
           </div>
   
-        {/* RIGHT: Cards + DP */}
-        <div className="relative">
-          {/* floating card 1 */}
+        {/* RIGHT: Clock Design */}
+        <div className="relative flex items-center justify-center min-h-[500px] sm:min-h-[700px] w-full py-24 px-4 overflow-visible">
+          {/* Clock Face */}
+          <div
+            data-clock
+            className={`relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] rounded-full border-4 overflow-visible
+                        ${darkMode
+                          ? "bg-gray-900/40 border-gray-700 shadow-2xl shadow-cyan-500/20"
+                          : "bg-white/40 backdrop-blur border-gray-300 shadow-2xl shadow-teal-500/20"}`}
+          >
+            {/* Clock Markers */}
+            {[...Array(12)].map((_, i) => {
+              const angle = (i * 30 - 90) * (Math.PI / 180);
+              const radius = window.innerWidth >= 640 ? 165 : 120;
+              const x = Math.cos(angle) * radius;
+              const y = Math.sin(angle) * radius;
+
+              return (
+                <div
+                  key={i}
+                  className={`absolute w-2 h-2 sm:w-2 sm:h-2 rounded-full
+                              ${[0, 3, 9].includes(i)
+                                ? darkMode ? "bg-cyan-400 shadow-lg shadow-cyan-500/50" : "bg-teal-500 shadow-lg shadow-teal-500/50"
+                                : darkMode ? "bg-gray-600" : "bg-gray-400"}`}
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`
+                  }}
+                />
+              );
+            })}
+
+            {/* Clock Hand */}
+            <div
+              ref={clockHandRef}
+              className="absolute left-1/2 top-1/2 origin-bottom"
+              style={{
+                width: '3px',
+                height: isSmallScreen ? '110px' : '150px',
+                marginLeft: isSmallScreen ? '-1.5px' : '-2px',
+                marginTop: isSmallScreen ? '-110px' : '-150px',
+              }}
+            >
+              <div className={`w-full h-full rounded-full
+                              ${darkMode
+                                ? "bg-gradient-to-t from-cyan-400 to-cyan-500"
+                                : "bg-gradient-to-t from-teal-500 to-teal-600"}`}
+              />
+              <div className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 sm:w-4 sm:h-4 rounded-full
+                              ${darkMode ? "bg-cyan-400 shadow-lg shadow-cyan-500/50" : "bg-teal-500 shadow-lg shadow-teal-500/50"}`}
+              />
+            </div>
+
+            {/* Center DP Photo */}
+            <div
+              data-photo
+              className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+                          w-[140px] h-[140px] sm:w-[200px] sm:h-[200px]
+                          rounded-full overflow-hidden shadow-2xl ring-4
+                          ${darkMode ? "ring-gray-800" : "ring-white"}`}
+            >
+              <img
+                src={portfolioData.avatar}
+                alt="Profile"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          {/* Card 1: 12 o'clock position (top) */}
           <div
             data-card
-            data-float="a"
-            className={`absolute sm:-top-20 sm:-left-6 -top-8 left-0 w-40 xs:w-56 sm:w-72 rounded-2xl p-3 sm:p-4 shadow-xl border
-                        ${darkMode ? "bg-gray-800/80 border-gray-700" : "bg-white/80 backdrop-blur border-gray-200"}
-                        max-sm:-translate-x-2`}
+            data-card-highlight="a"
+            className={`absolute top-2 sm:top-0 left-1/2 -translate-x-1/2
+                        w-40 sm:w-48 rounded-xl p-2 sm:p-2.5 shadow-xl border transition-all duration-300 z-10
+                        ${darkMode ? "bg-gray-800/90 border-gray-700" : "bg-white/90 backdrop-blur border-gray-200"}`}
           >
-            <p className={`text-sm font-semibold ${darkMode ? "text-white" : "text-gray-900"}`}>
+            <p className={`text-xs sm:text-sm font-semibold ${darkMode ? "text-white" : "text-gray-900"}`}>
               {portfolioData.name}
             </p>
-            <p className={`text-[11px] ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+            <p className={`text-[10px] sm:text-[11px] ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
               {portfolioData.location}
             </p>
-            {/* WARNING: bg-img-portfolio.jpg is 12MB! Compress to <300KB for better performance */}
             <img
               src="./Media/bg-img-portfolio.jpg"
               alt="Project Preview"
-              className="mt-3 h-20 sm:h-36 w-full object-cover rounded-lg"
+              className="mt-2 h-20 sm:h-24 w-full object-cover rounded-lg"
               loading="lazy"
             />
-            <div className="mt-3 flex items-center justify-between">
+            <div className="mt-2 flex items-center justify-between">
               <span
                 className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] px-2 py-1 rounded-full
                            bg-gradient-to-r from-[#22a096] via-[#29a8b6] to-[#41d8e0] text-white"
               >
-                <FaReact size={11} className="mr-1" />
+                <FaReact size={10} className="mr-1" />
                 REACT SPECIALIST
               </span>
             </div>
           </div>
 
-          {/* DP photo */}
-          <div
-            data-photo
-            className={`relative ml-auto mr-8 lg:mr-6 mb-8
-                        w-[150px] h-[170px] xs:w-[170px] xs:h-[190px] sm:w-[260px] sm:h-[260px]
-                        rounded-2xl overflow-hidden shadow-2xl
-                        ${darkMode ? "ring-1 ring-gray-700" : "ring-1 ring-gray-200"}`}
-          >
-            <img
-              src={portfolioData.avatar}
-              alt="Profile"
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-
-          {/* floating brand pill */}
+          {/* Card 2: 4 o'clock position (right) */}
           <div
             data-card
-            data-float="b"
-            className={`absolute -bottom-12 sm:-bottom-16 left-0 right-0 mx-auto
-                       w-[92%] xs:w-[88%] sm:w-[75%] rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 shadow-xl border
-                       ${darkMode ? "bg-gray-800/80 border-gray-700" : "bg-white/80 backdrop-blur border-gray-200"}
-                       text-[11px] sm:text-sm`}
+            data-card-highlight="b"
+            className={`absolute -right-3 sm:-right-14 top-1/2 -translate-y-1/4
+                        w-27 sm:w-42 rounded-xl px-2 sm:px-3 py-2 sm:py-2.5 shadow-xl border transition-all duration-300 z-10
+                        ${darkMode ? "bg-gray-800/90 border-gray-700" : "bg-white/90 backdrop-blur border-gray-200"}
+                        text-[10px] sm:text-xs`}
           >
             <p className={`opacity-90 truncate ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-              The most recent projects I happily worked with ✨
+              Recent projects ✨
             </p>
-            <div className="mt-1.5 sm:mt-2 flex flex-wrap gap-1.5 sm:gap-2 items-center">
-              {(portfolioData.brands || []).map((b, i) => (
+            <div className="mt-1.5 flex flex-wrap sm-flex-col  gap-1.5">
+              {(portfolioData.brands || []).slice(0, 4).map((b, i) => (
                 <a
                   key={i}
                   href={b.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-2 py-1 rounded-full max-w-[45%] sm:max-w-none truncate cursor-pointer
+                  className="px-2 py-0.5 w-15 text-[9px] sm:text-[10px] rounded-full truncate cursor-pointer
                              bg-gradient-to-r from-[#22a096] via-[#29a8b6] to-[#41d8e0] text-white
                              transition-all duration-300 ease-out
-                             hover:-translate-y-1 hover:scale-105 hover:shadow-lg
-                             active:translate-y-0 active:scale-100"
+                             hover:-translate-y-1 hover:scale-105 hover:shadow-lg"
                   title={b.name}
                 >
                   {b.name}
@@ -176,50 +295,55 @@ const Hero = ({ darkMode }) => {
             </div>
           </div>
 
-          {/* small float icon group */}
+          {/* Card 3: 8 o'clock position (left) */}
           <div
             data-card
-            data-float="c"
-            className={`absolute -right-6 sm:-right-15 -top-6 sm:-top-30 grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 p-2 rounded-2xl shadow-xl
-                ${darkMode ? "bg-gray-800/80 border border-gray-700" : "bg-white/80 backdrop-blur border border-gray-200"}`}            
-            >
+            data-card-highlight="c"
+            className={`absolute -left-3 sm:left-3 top-1/2 translate-y-1/4
+                        grid grid-cols-1 sm:grid-cols-2 gap-1.5 p-2 rounded-xl shadow-xl border transition-all duration-300 z-10
+                        ${darkMode ? "bg-gray-800/90 border-gray-700" : "bg-white/90 backdrop-blur border-gray-200"}`}
+          >
             <a
               href={portfolioData.socials.linkedin}
               target="_blank"
               rel="noreferrer"
-              className="p-1.5 sm:p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:scale-105 transition"
+              className={`p-2 rounded-lg hover:scale-110 transition
+                          ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}
               aria-label="LinkedIn"
               title="LinkedIn"
             >
-              <FaLinkedin size={16} className="text-[#0077B5]" />
+              <FaLinkedin size={18} className="text-[#0077B5]" />
             </a>
             <a
               href={portfolioData.socials.github}
               target="_blank"
               rel="noreferrer"
-              className="p-1.5 sm:p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:scale-105 transition"
+              className={`p-2 rounded-lg hover:scale-110 transition
+                          ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}
               aria-label="GitHub"
               title="GitHub"
             >
-              <FaGithub size={16} className="text-[#181717]" />
+              <FaGithub size={18} className={darkMode ? "text-white" : "text-[#181717]"} />
             </a>
             <a
               href={portfolioData.socials.email}
-              className="p-1.5 sm:p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:scale-105 transition"
+              className={`p-2 rounded-lg hover:scale-110 transition
+                          ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}
               aria-label="Email"
               title="Email"
             >
-              <FaEnvelope size={16} className="text-[#D14836]" />
+              <FaEnvelope size={18} className="text-[#D14836]" />
             </a>
             <a
               href={portfolioData.socials.instagram}
               target="_blank"
               rel="noreferrer"
-              className="p-1.5 sm:p-2 rounded-full bg-white hover:scale-105 transition"
+              className={`p-2 rounded-lg hover:scale-110 transition
+                          ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}
               aria-label="Instagram"
               title="Instagram"
             >
-              <FaInstagram size={16} className="text-[#E4405F]" />
+              <FaInstagram size={18} className="text-[#E4405F]" />
             </a>
           </div>
         </div>
@@ -229,3 +353,5 @@ const Hero = ({ darkMode }) => {
 };
 
 export default React.memo(Hero);
+
+

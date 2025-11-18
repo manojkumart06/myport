@@ -49,3 +49,29 @@
       transform: translateX(100%);
     }
   }
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 3s linear infinite;
+  }
+
+  /* Animated nav link underline - grows left to right on hover, shrinks right to left on leave */
+  .nav-link .nav-underline {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease-out;
+  }
+
+  .nav-link:hover .nav-underline {
+    transform: scaleX(1);
+    transform-origin: left;
+    transition: transform 0.3s ease-out;
+  }

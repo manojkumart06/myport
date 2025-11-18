@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import {
   Moon, Sun, Menu, X, Mail,
@@ -6,13 +7,13 @@ import {
 } from 'lucide-react';
 import portfolioData from './data/portfolioData.json';
 import ProgressBar from './components/ProgressBar';
-import Hero from './components/Hero';
 import AnimatedGradient from './components/AnimatedGradient';
 import ParticleBackground from './components/ParticleBackground';
 import GridBackground from './components/GridBackground';
 import WaveBackground from './components/WaveBackground';
 import GeometricBackground from './components/GeometricBackground';
 import FloatingLights from './components/FloatingLights';
+import Hero from './components/Hero';
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(true);
@@ -246,8 +247,13 @@ const halfWidthRef = useRef(0);
           
           <nav className="hidden md:flex space-x-8">
             {['Home', 'About', 'Projects', 'Experience', 'Education', 'Contact'].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} className={`hover:text-teal-500 transition-all duration-200 active:scale-95 active:text-teal-600 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <a
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                className={`nav-link relative pb-1 hover:text-teal-500 transition-colors duration-200 active:scale-95 active:text-teal-600 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}
+              >
                 {item}
+                <span className="nav-underline absolute bottom-0 left-0 h-[1px] w-full bg-gradient-to-r from-teal-500 to-cyan-500" />
               </a>
             ))}
           </nav>
@@ -266,8 +272,13 @@ const halfWidthRef = useRef(0);
           <div className={`md:hidden ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <nav className="container mx-auto px-4 py-4 space-y-4">
               {['Home', 'About', 'Projects', 'Experience', 'Education', 'Contact'].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} className={`block hover:text-teal-500 transition-all duration-200 active:scale-95 active:text-teal-600 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase()}`}
+                  className={`nav-link block relative pb-1 hover:text-teal-500 transition-colors duration-200 active:scale-95 active:text-teal-600 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                >
                   {item}
+                  <span className="nav-underline absolute bottom-0 left-0 h-[1px] w-full bg-gradient-to-r from-teal-500 to-cyan-500" />
                 </a>
               ))}
             </nav>
@@ -763,3 +774,4 @@ const halfWidthRef = useRef(0);
 };
 
 export default App;
+
