@@ -39,8 +39,8 @@ const ParticleBackground = ({ darkMode, particleCount = 50, className = '' }) =>
 
       draw() {
         ctx.fillStyle = darkMode
-          ? `rgba(15, 158, 176, ${this.opacity})`
-          : `rgba(15, 158, 176, ${this.opacity * 0.6})`;
+          ? `rgba(245, 158, 11, ${this.opacity})`
+          : `rgba(245, 158, 11, ${this.opacity * 0.6})`;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -84,8 +84,8 @@ const ParticleBackground = ({ darkMode, particleCount = 50, className = '' }) =>
 
           if (distance < 100) {
             ctx.strokeStyle = darkMode
-              ? `rgba(15, 158, 176, ${0.2 * (1 - distance / 100)})`
-              : `rgba(15, 158, 176, ${0.1 * (1 - distance / 100)})`;
+              ? `rgba(245, 158, 11, ${0.2 * (1 - distance / 100)})`
+              : `rgba(245, 158, 11, ${0.1 * (1 - distance / 100)})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(particleA.x, particleA.y);

@@ -38,8 +38,8 @@ const GridBackground = ({ darkMode, className = '' }) => {
           const opacity = wave * (darkMode ? 0.3 : 0.15);
 
           ctx.fillStyle = darkMode
-            ? `rgba(15, 158, 176, ${opacity})`
-            : `rgba(15, 158, 176, ${opacity})`;
+            ? `rgba(245, 158, 11, ${opacity})`
+            : `rgba(245, 158, 11, ${opacity})`;
           ctx.beginPath();
           ctx.arc(x, y, dotSize, 0, Math.PI * 2);
           ctx.fill();

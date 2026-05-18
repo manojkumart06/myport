@@ -46,13 +46,13 @@ export default function CountdownTimer({ darkMode, targetDate = null }) {
       <span className={`font-semibold ${darkMode ? 'text-purple-400' : 'text-purple-600'}`}>
         {timeLeft.days}D
       </span>
-      <span className={`font-semibold ${darkMode ? 'text-cyan-400' : 'text-cyan-600'}`}>
+      <span className={`font-semibold ${darkMode ? 'text-amber-400' : 'text-amber-600'}`}>
         {timeLeft.hours}h
       </span>
-      <span className={`font-semibold ${darkMode ? 'text-cyan-400' : 'text-cyan-600'}`}>
+      <span className={`font-semibold ${darkMode ? 'text-amber-400' : 'text-amber-600'}`}>
         {timeLeft.minutes}m
       </span>
-      <span className={`font-semibold ${darkMode ? 'text-cyan-400' : 'text-cyan-600'}`}>
+      <span className={`font-semibold ${darkMode ? 'text-amber-400' : 'text-amber-600'}`}>
         {timeLeft.seconds}s
       </span>
       <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>

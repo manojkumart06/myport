@@ -46,8 +46,8 @@ const WaveBackground = ({ darkMode, className = '' }) => {
         ctx.closePath();
 
         const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        const baseColor = darkMode ? '15, 158, 176' : '15, 158, 176';
-        const accentColor = darkMode ? '59, 130, 246' : '96, 165, 250';
+        const baseColor = darkMode ? '245, 158, 11' : '245, 158, 11';
+        const accentColor = darkMode ? '251, 191, 36' : '217, 119, 6';
 
         gradient.addColorStop(0, `rgba(${baseColor}, ${wave.opacity})`);
         gradient.addColorStop(0.5, `rgba(${accentColor}, ${wave.opacity * 0.7})`);

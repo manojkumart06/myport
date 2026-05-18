@@ -95,8 +95,8 @@ const Hero = ({ darkMode }) => {
           clockTimeline.to(`[data-card-highlight="${card}"]`, {
             scale: 1.1,
             boxShadow: darkMode
-              ? "0 0 30px rgba(34, 211, 238, 0.6)"
-              : "0 0 30px rgba(20, 184, 166, 0.6)",
+              ? "0 0 30px rgba(251, 191, 36, 0.6)"
+              : "0 0 30px rgba(245, 158, 11, 0.6)",
             duration: 0.3,
             yoyo: true,
             repeat: 1
@@ -137,8 +137,8 @@ const Hero = ({ darkMode }) => {
               className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold
                          bg-gradient-to-r ring-1
                          ${darkMode
-                           ? "from-teal-500/20 to-cyan-500/20 ring-teal-500/40 text-teal-300"
-                           : "from-teal-500/15 to-cyan-500/15 ring-teal-500/30 text-teal-700"}`}
+                           ? "from-amber-500/20 to-amber-500/20 ring-amber-500/40 text-amber-300"
+                           : "from-amber-500/15 to-amber-500/15 ring-amber-500/30 text-amber-700"}`}
             >
               <span className={`w-2 h-2 rounded-full ${darkMode ? "bg-emerald-400" : "bg-emerald-500"}`} />
               Available for new opportunities
@@ -169,8 +169,8 @@ const Hero = ({ darkMode }) => {
             data-clock
             className={`relative w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] rounded-full border-4 overflow-visible
                         ${darkMode
-                          ? "bg-gray-900/40 border-gray-700 shadow-2xl shadow-cyan-500/20"
-                          : "bg-white/40 backdrop-blur border-gray-300 shadow-2xl shadow-teal-500/20"}`}
+                          ? "bg-zinc-950/40 border-gray-700 shadow-2xl shadow-amber-500/20"
+                          : "bg-white/40 backdrop-blur border-gray-300 shadow-2xl shadow-amber-500/20"}`}
           >
             {/* Clock Markers */}
             {[...Array(12)].map((_, i) => {
@@ -184,7 +184,7 @@ const Hero = ({ darkMode }) => {
                   key={i}
                   className={`absolute w-2 h-2 sm:w-2 sm:h-2 rounded-full
                               ${[0, 3, 9].includes(i)
-                                ? darkMode ? "bg-cyan-400 shadow-lg shadow-cyan-500/50" : "bg-teal-500 shadow-lg shadow-teal-500/50"
+                                ? darkMode ? "bg-amber-400 shadow-lg shadow-amber-500/50" : "bg-amber-500 shadow-lg shadow-amber-500/50"
                                 : darkMode ? "bg-gray-600" : "bg-gray-400"}`}
                   style={{
                     left: '50%',
@@ -208,11 +208,11 @@ const Hero = ({ darkMode }) => {
             >
               <div className={`w-full h-full rounded-full
                               ${darkMode
-                                ? "bg-gradient-to-t from-cyan-400 to-cyan-500"
-                                : "bg-gradient-to-t from-teal-500 to-teal-600"}`}
+                                ? "bg-gradient-to-t from-amber-400 to-amber-500"
+                                : "bg-gradient-to-t from-amber-500 to-amber-600"}`}
               />
               <div className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 sm:w-4 sm:h-4 rounded-full
-                              ${darkMode ? "bg-cyan-400 shadow-lg shadow-cyan-500/50" : "bg-teal-500 shadow-lg shadow-teal-500/50"}`}
+                              ${darkMode ? "bg-amber-400 shadow-lg shadow-amber-500/50" : "bg-amber-500 shadow-lg shadow-amber-500/50"}`}
               />
             </div>
 
@@ -239,7 +239,7 @@ const Hero = ({ darkMode }) => {
             data-card-highlight="a"
             className={`absolute top-2 sm:top-0 left-1/2 -translate-x-1/2
                         w-40 sm:w-48 rounded-xl p-2 sm:p-2.5 shadow-xl border transition-all duration-300 z-10
-                        ${darkMode ? "bg-gray-800/90 border-gray-700" : "bg-white/90 backdrop-blur border-gray-200"}`}
+                        ${darkMode ? "bg-zinc-900/90 border-gray-700" : "bg-white/90 backdrop-blur border-gray-200"}`}
           >
             <p className={`text-xs sm:text-sm font-semibold ${darkMode ? "text-white" : "text-gray-900"}`}>
               {portfolioData.name}
@@ -256,7 +256,7 @@ const Hero = ({ darkMode }) => {
             <div className="mt-2 flex items-center justify-between">
               <span
                 className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] px-2 py-1 rounded-full
-                           bg-gradient-to-r from-[#22a096] via-[#29a8b6] to-[#41d8e0] text-white"
+                           bg-gradient-to-r from-[#d97706] via-[#f59e0b] to-[#fbbf24] text-white"
               >
                 <FaReact size={10} className="mr-1" />
                 REACT SPECIALIST
@@ -270,7 +270,7 @@ const Hero = ({ darkMode }) => {
             data-card-highlight="b"
             className={`absolute -right-3 sm:-right-14 top-1/2 -translate-y-1/4
                         w-27 sm:w-42 rounded-xl px-2 sm:px-3 py-2 sm:py-2.5 shadow-xl border transition-all duration-300 z-10
-                        ${darkMode ? "bg-gray-800/90 border-gray-700" : "bg-white/90 backdrop-blur border-gray-200"}
+                        ${darkMode ? "bg-zinc-900/90 border-gray-700" : "bg-white/90 backdrop-blur border-gray-200"}
                         text-[10px] sm:text-xs`}
           >
             <p className={`opacity-90 truncate ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
@@ -284,7 +284,7 @@ const Hero = ({ darkMode }) => {
                   target="_blank"
                   rel="noreferrer"
                   className="px-2 py-0.5 w-15 text-[9px] sm:text-[10px] rounded-full truncate cursor-pointer
-                             bg-gradient-to-r from-[#22a096] via-[#29a8b6] to-[#41d8e0] text-white
+                             bg-gradient-to-r from-[#d97706] via-[#f59e0b] to-[#fbbf24] text-white
                              transition-all duration-300 ease-out
                              hover:-translate-y-1 hover:scale-105 hover:shadow-lg"
                   title={b.name}
@@ -301,14 +301,14 @@ const Hero = ({ darkMode }) => {
             data-card-highlight="c"
             className={`absolute -left-3 sm:left-3 top-1/2 translate-y-1/4
                         grid grid-cols-1 sm:grid-cols-2 gap-1.5 p-2 rounded-xl shadow-xl border transition-all duration-300 z-10
-                        ${darkMode ? "bg-gray-800/90 border-gray-700" : "bg-white/90 backdrop-blur border-gray-200"}`}
+                        ${darkMode ? "bg-zinc-900/90 border-gray-700" : "bg-white/90 backdrop-blur border-gray-200"}`}
           >
             <a
               href={portfolioData.socials.linkedin}
               target="_blank"
               rel="noreferrer"
               className={`p-2 rounded-lg hover:scale-110 transition
-                          ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}
+                          ${darkMode ? "bg-zinc-800" : "bg-gray-100"}`}
               aria-label="LinkedIn"
               title="LinkedIn"
             >
@@ -319,7 +319,7 @@ const Hero = ({ darkMode }) => {
               target="_blank"
               rel="noreferrer"
               className={`p-2 rounded-lg hover:scale-110 transition
-                          ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}
+                          ${darkMode ? "bg-zinc-800" : "bg-gray-100"}`}
               aria-label="GitHub"
               title="GitHub"
             >
@@ -328,7 +328,7 @@ const Hero = ({ darkMode }) => {
             <a
               href={portfolioData.socials.email}
               className={`p-2 rounded-lg hover:scale-110 transition
-                          ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}
+                          ${darkMode ? "bg-zinc-800" : "bg-gray-100"}`}
               aria-label="Email"
               title="Email"
             >
@@ -339,7 +339,7 @@ const Hero = ({ darkMode }) => {
               target="_blank"
               rel="noreferrer"
               className={`p-2 rounded-lg hover:scale-110 transition
-                          ${darkMode ? "bg-gray-700" : "bg-gray-100"}`}
+                          ${darkMode ? "bg-zinc-800" : "bg-gray-100"}`}
               aria-label="Instagram"
               title="Instagram"
             >

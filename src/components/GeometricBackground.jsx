@@ -47,8 +47,8 @@ const GeometricBackground = ({ darkMode, className = '' }) => {
         ctx.rotate(this.rotation);
 
         const color = darkMode
-          ? `rgba(15, 158, 176, ${this.opacity})`
-          : `rgba(15, 158, 176, ${this.opacity * 0.7})`;
+          ? `rgba(245, 158, 11, ${this.opacity})`
+          : `rgba(245, 158, 11, ${this.opacity * 0.7})`;
 
         ctx.strokeStyle = color;
         ctx.lineWidth = 2;
