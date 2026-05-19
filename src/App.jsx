@@ -9,7 +9,9 @@ import portfolioData from './data/portfolioData.json';
 import ProgressBar from './components/ProgressBar';
 import AnimatedGradient from './components/AnimatedGradient';
 import ParticleBackground from './components/ParticleBackground';
+import CinematicBackground from './components/CinematicBackground';
 import GridBackground from './components/GridBackground';
+import OrbitalBackground from './components/OrbitalBackground';
 import WaveBackground from './components/WaveBackground';
 import GeometricBackground from './components/GeometricBackground';
 import FloatingLights from './components/FloatingLights';
@@ -172,6 +174,22 @@ const halfWidthRef = useRef(0);
   }, []);
 
   useEffect(() => {
+    const section = document.getElementById('about');
+    if (!section) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          section.classList.add('about-revealed');
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -10% 0px' }
+    );
+    obs.observe(section);
+    return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
     const el = projectsContainerRef.current;
     if (!el) return;
   
@@ -231,7 +249,7 @@ const halfWidthRef = useRef(0);
   return (
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark bg-zinc-950' : 'bg-white'}`}>
       {/* Header */}
-      <header className={`fixed w-full z-50 transition-all duration-300 ${darkMode ? 'bg-zinc-950/90' : 'bg-white/90'} backdrop-blur-sm`}>
+      <header className={`fixed w-full z-50 transition-all duration-300 backdrop-blur-sm ${darkMode ? 'bg-gradient-to-b from-zinc-950/80 via-zinc-950/40 to-transparent' : 'bg-gradient-to-b from-white/80 via-white/40 to-transparent'}`}>
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95" onClick={() => scrollToSection('home')}>
           <img
@@ -288,19 +306,33 @@ const halfWidthRef = useRef(0);
 
       {/* Hero */}
       <section id="home" className="relative min-h-screen flex items-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <ParticleBackground darkMode={darkMode} particleCount={60} />
+        <CinematicBackground darkMode={darkMode} />
         <div className="relative z-10 w-full">
           <Hero darkMode={darkMode}/>
         </div>
       </section>
 
       {/* About (skills + tools separated, animated) */}
-      <section id="about" className={`relative min-h-screen flex flex-col justify-center py-20 px-4 overflow-hidden ${darkMode ? 'bg-zinc-900' : 'bg-gray-50'}`}>
-        <GridBackground darkMode={darkMode} />
-        <div className="container mx-auto relative z-10">
-          <h2 className={`text-4xl font-bold text-center mb-12 ${darkMode ? 'text-white' : 'text-gray-900'}`}>About Me</h2>
+      <section id="about" className="relative min-h-screen flex flex-col justify-center py-20 px-4 overflow-hidden">
+        <OrbitalBackground darkMode={darkMode} />
+        {darkMode && <div className="about-curtain" />}
+        <div className="container mx-auto relative z-10" style={{ perspective: '1200px' }}>
+          <h2 className={`text-5xl md:text-6xl font-extrabold tracking-tight text-center mb-3 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+            {'About Me'.split('').map((c, i) => (
+              <span
+                key={i}
+                className="about-letter"
+                style={{ animationDelay: `${i * 0.06}s` }}
+              >
+                {c === ' ' ? ' ' : c}
+              </span>
+            ))}
+          </h2>
+          <div className="flex justify-center mb-12">
+            <span className="about-underline block h-1 w-28 bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600 rounded-full" />
+          </div>
           <div className="grid lg:grid-cols-3 gap-12 items-start">
-            <div className="lg:col-span-1">
+            <div className="about-col-left lg:col-span-1">
               <p className={`text-lg mb-6 leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{portfolioData.bio}</p>
               <div className="grid grid-cols-1 gap-4 text-sm">
                 <div>
@@ -313,7 +345,7 @@ const halfWidthRef = useRef(0);
                 </div>
               </div>
             </div>
-            <div className="lg:col-span-1">
+            <div className="about-col-mid lg:col-span-1">
               <h3 className={`text-2xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Skills</h3>
               <div className="space-y-4">
                 {(portfolioData.skills || []).map((s, i) => (
@@ -321,7 +353,7 @@ const halfWidthRef = useRef(0);
                 ))}
               </div>
             </div>
-            <div className="lg:col-span-1">
+            <div className="about-col-right lg:col-span-1">
               <h3 className={`text-2xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Tools & Frameworks</h3>
               <div className="space-y-4">
                 {(portfolioData.tools || []).map((t, i) => (
@@ -335,7 +367,9 @@ const halfWidthRef = useRef(0);
 
       {/* Projects */}
       <section id="projects" className="relative min-h-screen flex flex-col justify-center py-20 overflow-hidden">
-        <WaveBackground darkMode={darkMode} />
+        <div className={`absolute inset-0 pointer-events-none ${darkMode ? 'bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.55)_85%)]' : 'bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.06)_90%)]'}`} />
+        <div className="absolute top-20 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent pointer-events-none" />
+        <div className="absolute bottom-20 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent pointer-events-none" />
         <div className="relative z-10">
           <h2 className={`text-4xl font-bold text-center mb-12 ${darkMode ? 'text-white' : 'text-gray-900'}`}>
             Featured Projects
@@ -475,8 +509,9 @@ const halfWidthRef = useRef(0);
 
 
       {/* Experience */}
-      <section id="experience" className={`relative min-h-screen flex flex-col justify-center py-20 px-4 overflow-x-hidden ${darkMode ? 'bg-zinc-900' : 'bg-gray-50'}`}>
-        <FloatingLights darkMode={darkMode} />
+      <section id="experience" className="relative min-h-screen flex flex-col justify-center py-20 px-4 overflow-x-hidden">
+        <div className={`absolute inset-0 pointer-events-none ${darkMode ? 'bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.55)_85%)]' : 'bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.06)_90%)]'}`} />
+        <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-px bg-gradient-to-b from-transparent via-amber-500/30 to-transparent pointer-events-none" />
         <div className="container mx-auto relative z-10">
           <h2 className={`text-4xl font-bold text-center mb-12 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Experience</h2>
           <div className="relative max-w-3xl mx-auto px-4 sm:px-0">
@@ -552,7 +587,11 @@ const halfWidthRef = useRef(0);
 
       {/* Education */}
       <section id="education" className="relative min-h-screen flex flex-col justify-center py-20 px-4 overflow-x-hidden">
-        <GeometricBackground darkMode={darkMode} />
+        <div className={`absolute inset-0 pointer-events-none ${darkMode ? 'bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.55)_85%)]' : 'bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.06)_90%)]'}`} />
+        <div className="absolute top-8 left-8 w-12 h-12 border-t-2 border-l-2 border-amber-500/40 pointer-events-none" />
+        <div className="absolute top-8 right-8 w-12 h-12 border-t-2 border-r-2 border-amber-500/40 pointer-events-none" />
+        <div className="absolute bottom-8 left-8 w-12 h-12 border-b-2 border-l-2 border-amber-500/40 pointer-events-none" />
+        <div className="absolute bottom-8 right-8 w-12 h-12 border-b-2 border-r-2 border-amber-500/40 pointer-events-none" />
         <div className="container mx-auto relative z-10">
           <h2 className={`text-4xl font-bold text-center mb-12 ${darkMode ? 'text-white' : 'text-gray-900'}`}>Education</h2>
           <div className="relative max-w-3xl mx-auto px-4 sm:px-0">
