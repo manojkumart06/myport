@@ -158,7 +158,7 @@ const Hero = ({ darkMode }) => {
                 data-sub
                 className={`mt-5 max-w-xl text-base md:text-lg ${darkMode ? "text-gray-300" : "text-gray-600"}`}
                 >
-                I have 3.8+ years of experience as a dedicated Frontend Developer, sculpting remarkable digital experiences with precision and a deep passion for unraveling complex challenges.
+                I have 4+ years of experience as a dedicated Frontend Developer, sculpting remarkable digital experiences with precision and a deep passion for unraveling complex challenges.
             </p>
           </div>
   
