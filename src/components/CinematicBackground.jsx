@@ -50,7 +50,7 @@ const CinematicBackground = ({ darkMode, className = '' }) => {
       mouse.x += (mouse.tx - mouse.x) * 0.12;
       mouse.y += (mouse.ty - mouse.y) * 0.12;
 
-      ctx.fillStyle = darkMode ? '#09090b' : '#fafafa';
+      ctx.fillStyle = darkMode ? '#0C0C0C' : '#fafafa';
       ctx.fillRect(0, 0, w, h);
 
       const baseDot = darkMode ? 'rgba(245, 158, 11, 0.18)' : 'rgba(217, 119, 6, 0.22)';
@@ -65,7 +65,7 @@ const CinematicBackground = ({ darkMode, className = '' }) => {
           const radius = DOT_R + t * 2.2;
 
           if (t > 0.02) {
-            ctx.fillStyle = `rgba(${darkMode ? '251, 191, 36' : '217, 119, 6'}, ${0.18 + t * 0.77})`;
+            ctx.fillStyle = `rgba(${darkMode ? '187, 204, 215' : '100, 105, 115'}, ${0.18 + t * 0.77})`;
           } else {
             ctx.fillStyle = baseDot;
           }
@@ -78,9 +78,9 @@ const CinematicBackground = ({ darkMode, className = '' }) => {
       if (mouse.active) {
         ctx.globalCompositeOperation = darkMode ? 'lighter' : 'multiply';
         const glow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, SPOT_R * 1.3);
-        glow.addColorStop(0, darkMode ? 'rgba(245, 158, 11, 0.22)' : 'rgba(217, 119, 6, 0.10)');
-        glow.addColorStop(0.5, darkMode ? 'rgba(245, 158, 11, 0.08)' : 'rgba(217, 119, 6, 0.04)');
-        glow.addColorStop(1, 'rgba(245, 158, 11, 0)');
+        glow.addColorStop(0, darkMode ? 'rgba(215, 226, 234, 0.22)' : 'rgba(100, 105, 115, 0.10)');
+        glow.addColorStop(0.5, darkMode ? 'rgba(215, 226, 234, 0.08)' : 'rgba(100, 105, 115, 0.04)');
+        glow.addColorStop(1, 'rgba(215, 226, 234, 0)');
         ctx.fillStyle = glow;
         ctx.fillRect(0, 0, w, h);
         ctx.globalCompositeOperation = 'source-over';

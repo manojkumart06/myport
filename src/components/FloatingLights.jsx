@@ -64,8 +64,8 @@ const FloatingLights = ({ darkMode, className = '' }) => {
       draw() {
         // Get color
         const color = this.color === 'teal'
-          ? darkMode ? '245, 158, 11' : '245, 158, 11'
-          : darkMode ? '251, 191, 36' : '217, 119, 6';
+          ? darkMode ? '215, 226, 234' : '215, 226, 234'
+          : darkMode ? '187, 204, 215' : '100, 105, 115';
 
         // Outer glow
         const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
@@ -125,8 +125,8 @@ const FloatingLights = ({ darkMode, className = '' }) => {
           if (distance < 200) {
             const opacity = (1 - distance / 200) * 0.15;
             ctx.strokeStyle = darkMode
-              ? `rgba(245, 158, 11, ${opacity})`
-              : `rgba(245, 158, 11, ${opacity * 0.7})`;
+              ? `rgba(215, 226, 234, ${opacity})`
+              : `rgba(215, 226, 234, ${opacity * 0.7})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(lights[i].x, lights[i].y);
@@ -147,8 +147,8 @@ const FloatingLights = ({ darkMode, className = '' }) => {
         const rayY = canvas.height / 2 + Math.sin(rayAngle) * canvas.height * 0.3;
 
         const rayGradient = ctx.createRadialGradient(rayX, rayY, 0, rayX, rayY, canvas.width * 0.4);
-        rayGradient.addColorStop(0, darkMode ? 'rgba(245, 158, 11, 0.03)' : 'rgba(245, 158, 11, 0.02)');
-        rayGradient.addColorStop(1, 'rgba(245, 158, 11, 0)');
+        rayGradient.addColorStop(0, darkMode ? 'rgba(215, 226, 234, 0.03)' : 'rgba(215, 226, 234, 0.02)');
+        rayGradient.addColorStop(1, 'rgba(215, 226, 234, 0)');
 
         ctx.fillStyle = rayGradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);

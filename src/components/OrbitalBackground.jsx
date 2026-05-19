@@ -30,7 +30,7 @@ const OrbitalBackground = ({ darkMode, className = '' }) => {
         this.centerY = 0;
         this.size = Math.random() * 20 + 10;
         this.opacity = Math.random() * 0.3 + 0.2;
-        this.hue = Math.random() * 20 + 35;
+        this.hue = Math.random() * 30 + 200;
       }
 
       update() {
@@ -46,14 +46,14 @@ const OrbitalBackground = ({ darkMode, className = '' }) => {
         // Gradient for the orb
         const gradient = ctx.createRadialGradient(x, y, 0, x, y, this.size);
         gradient.addColorStop(0, darkMode
-          ? `rgba(245, 158, 11, ${this.opacity})`
-          : `rgba(245, 158, 11, ${this.opacity * 0.7})`
+          ? `rgba(215, 226, 234, ${this.opacity})`
+          : `rgba(215, 226, 234, ${this.opacity * 0.7})`
         );
         gradient.addColorStop(0.5, darkMode
-          ? `rgba(251, 191, 36, ${this.opacity * 0.5})`
-          : `rgba(217, 119, 6, ${this.opacity * 0.4})`
+          ? `rgba(187, 204, 215, ${this.opacity * 0.5})`
+          : `rgba(100, 105, 115, ${this.opacity * 0.4})`
         );
-        gradient.addColorStop(1, 'rgba(245, 158, 11, 0)');
+        gradient.addColorStop(1, 'rgba(215, 226, 234, 0)');
 
         ctx.fillStyle = gradient;
         ctx.beginPath();
@@ -62,8 +62,8 @@ const OrbitalBackground = ({ darkMode, className = '' }) => {
 
         // Trail effect
         ctx.strokeStyle = darkMode
-          ? `rgba(245, 158, 11, ${this.opacity * 0.2})`
-          : `rgba(245, 158, 11, ${this.opacity * 0.1})`;
+          ? `rgba(215, 226, 234, ${this.opacity * 0.2})`
+          : `rgba(215, 226, 234, ${this.opacity * 0.1})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc(this.centerX, this.centerY, this.radius, 0, Math.PI * 2);

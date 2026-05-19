@@ -20,19 +20,85 @@
       { "name": "Python", "level": 55 },
       { "name": "C", "level": 85 },
       { "name": "Datastructures", "level": 55 },
-      { "name": "MongoDB", "level": 85 }
+      { "name": "MongoDB", "level": 85 },
+      { "name": "PHP", "level": 65 }
     ],
     "tools": [
       { "name": "React", "level": 85 },
       { "name": "Redux", "level": 85 },
       { "name": "Tailwind CSS", "level": 70 },
       { "name": "Chakra UI", "level": 80 },
+      { "name": "WordPress", "level": 75 },
+      { "name": "Elementor", "level": 75 },
       { "name": "Generative AI tools", "level": 65 },
       { "name": "Git", "level": 75 },
       { "name": "Github", "level": 70 },
       { "name": "Jira", "level": 85 }
     ],
     "projects": [
+      {
+        "id": 101,
+        "title": "Hustle.ai",
+        "description": "AI ad tools for bulk campaign launch and automation. Production frontend at scale.",
+        "image": "https://api.microlink.io/?url=https%3A%2F%2Fhustle.ai%2F&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720",
+        "technologies": ["React", "TypeScript", "Redux"],
+        "liveUrl": "https://hustle.ai/",
+        "githubUrl": "https://hustle.ai/"
+      },
+      {
+        "id": 102,
+        "title": "Unilever Football Contest",
+        "description": "Interactive contest microsite for a Unilever football campaign — gamified entry flow with real-time leaderboard.",
+        "image": "https://api.microlink.io/?url=https%3A%2F%2Funileverfootballcontest.com%2F&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720",
+        "technologies": ["React", "Animation", "API"],
+        "liveUrl": "https://unileverfootballcontest.com/",
+        "githubUrl": "https://unileverfootballcontest.com/"
+      },
+      {
+        "id": 103,
+        "title": "Yudu",
+        "description": "Brand site built on WordPress with custom Elementor templates and PHP integrations.",
+        "image": "https://api.microlink.io/?url=https%3A%2F%2Fyudu.blinkrepo.in%2F&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720",
+        "technologies": ["WordPress", "Elementor", "PHP"],
+        "liveUrl": "https://yudu.blinkrepo.in/",
+        "githubUrl": "https://yudu.blinkrepo.in/"
+      },
+      {
+        "id": 106,
+        "title": "Raabta",
+        "description": "Brand experience site for Raabta — narrative-driven layout with motion and storytelling.",
+        "image": "https://api.microlink.io/?url=https%3A%2F%2Fraabta.blinkdigital.in%2F&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720",
+        "technologies": ["React", "Animation", "Branding"],
+        "liveUrl": "https://raabta.blinkdigital.in/",
+        "githubUrl": "https://raabta.blinkdigital.in/"
+      },
+      {
+        "id": 107,
+        "title": "DudduBook",
+        "description": "Personal journaling and bookmarks experience with a clean, intimate UI.",
+        "image": "https://api.microlink.io/?url=https%3A%2F%2Fmyduddubook.vercel.app%2F&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720",
+        "technologies": ["Next.js", "Tailwind CSS", "Responsive"],
+        "liveUrl": "https://myduddubook.vercel.app/",
+        "githubUrl": "https://myduddubook.vercel.app/"
+      },
+      {
+        "id": 104,
+        "title": "Anjali Farm",
+        "description": "Marketing site for a farm-to-table brand — clean storytelling layouts and motion-driven sections.",
+        "image": "https://api.microlink.io/?url=https%3A%2F%2Fanjali-farm.vercel.app%2F&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720",
+        "technologies": ["Next.js", "Tailwind CSS", "Framer Motion"],
+        "liveUrl": "https://anjali-farm.vercel.app/",
+        "githubUrl": "https://anjali-farm.vercel.app/"
+      },
+      {
+        "id": 105,
+        "title": "Nandi Dhaba",
+        "description": "Restaurant website featuring menu, gallery, and reservation flow with a warm visual identity.",
+        "image": "https://api.microlink.io/?url=https%3A%2F%2Fnandi-dhaba.vercel.app%2F&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720",
+        "technologies": ["Next.js", "Tailwind CSS", "Responsive"],
+        "liveUrl": "https://nandi-dhaba.vercel.app/",
+        "githubUrl": "https://nandi-dhaba.vercel.app/"
+      },
       {
         "id": 1,
         "title": "Habits Tracker",
@@ -79,15 +145,6 @@
         "githubUrl": "https://expensetrackerforuall.netlify.app/"
       },
       {
-        "id": 6,
-        "title": "Meals App",
-        "description": "Browse meals and recipes with category filters.",
-        "image": "./Media/Meals_app.png",
-        "technologies": ["HTML", "CSS", "JS"],
-        "liveUrl": "https://manojkumart06.github.io/MealsApp/",
-        "githubUrl": "https://manojkumart06.github.io/MealsApp/"
-      },
-      {
         "id": 7,
         "title": "Shopping Cart",
         "description": "Simple shopping cart demo with add/remove and totals.",
@@ -104,24 +161,6 @@
         "technologies": ["JS", "Weather API", "CSS"],
         "liveUrl": "https://stormsensewidget.netlify.app/",
         "githubUrl": "https://stormsensewidget.netlify.app/"
-      },
-      {
-        "id": 9,
-        "title": "Movie App",
-        "description": "Discover and rate movies with a responsive, card-based UI.",
-        "image": "./Media/MovieApp.png",
-        "technologies": ["React", "TMDB API", "CSS"],
-        "liveUrl": "https://moviereactbymanoj.netlify.app/",
-        "githubUrl": "https://moviereactbymanoj.netlify.app/"
-      },
-      {
-        "id": 10,
-        "title": "Node.js Authentication",
-        "description": "Auth boilerplate with sessions and secure flows.",
-        "image": "./Media/nodejsauth.PNG",
-        "technologies": ["Node.js", "Express", "Passport"],
-        "liveUrl": "https://github.com/manojkumart06/Nodejs-Authentication",
-        "githubUrl": "https://github.com/manojkumart06/Nodejs-Authentication"
       },
       {
         "id": 11,

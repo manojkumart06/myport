@@ -1,7 +1,47 @@
 @import "tailwindcss";
 
 * {
-  font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-family: 'Kanit', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  box-sizing: border-box;
+}
+
+.hero-heading {
+  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+@property --orbit-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes orbit-rotate {
+  to { --orbit-angle: 360deg; }
+}
+.orbit-frame {
+  background: conic-gradient(
+    from var(--orbit-angle),
+    transparent 0deg,
+    #B600A8 70deg,
+    #7721B1 170deg,
+    #BE4C00 250deg,
+    transparent 360deg
+  );
+  animation: orbit-rotate 4s linear infinite;
+}
+
+.nav-cta-hover {
+  background-image: linear-gradient(90deg, #D946EF 0%, #EC4899 40%, #F97316 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: -webkit-text-fill-color 0.25s ease, color 0.25s ease;
+}
+.nav-cta-hover:hover {
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 html {
@@ -23,7 +63,8 @@ html::-webkit-scrollbar { display: none; }
   }
 
   .animated-gradient-text {
-    background: linear-gradient(270deg, #92400e, #d97706, #f59e0b, #fbbf24);
+    background: linear-gradient(180deg, #646973, #BBCCD7, #D7E2EA, #BBCCD7);
+    background-size: 100% 400%;
     background-size: 800% 800%;
 
     /* Compatibility for text gradient */
