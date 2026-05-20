@@ -27,8 +27,8 @@ const Row = ({ exp, index }) => {
       }}
     >
       <span
-        className="hero-heading font-black shrink-0 leading-none"
-        style={{ fontSize: 'clamp(3rem, 10vw, 140px)' }}
+        className="hero-heading font-black shrink-0 leading-none tabular-nums text-right"
+        style={{ fontSize: 'clamp(3rem, 10vw, 140px)', minWidth: '1.6em' }}
       >
         {String(index + 1).padStart(2, '0')}
       </span>

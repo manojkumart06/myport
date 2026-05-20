@@ -39,7 +39,8 @@
   background-clip: text;
   transition: -webkit-text-fill-color 0.25s ease, color 0.25s ease;
 }
-.nav-cta-hover:hover {
+.nav-cta-hover:hover,
+.nav-cta-active {
   -webkit-text-fill-color: transparent;
   color: transparent;
 }

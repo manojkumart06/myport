@@ -76,7 +76,7 @@
         "id": 107,
         "title": "DudduBook",
         "description": "Personal journaling and bookmarks experience with a clean, intimate UI.",
-        "image": "https://api.microlink.io/?url=https%3A%2F%2Fmyduddubook.vercel.app%2F&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720",
+        "image": "./Media/MydudduBook.png",
         "technologies": ["Next.js", "Tailwind CSS", "Responsive"],
         "liveUrl": "https://myduddubook.vercel.app/",
         "githubUrl": "https://myduddubook.vercel.app/"
@@ -94,7 +94,7 @@
         "id": 105,
         "title": "Nandi Dhaba",
         "description": "Restaurant website featuring menu, gallery, and reservation flow with a warm visual identity.",
-        "image": "https://api.microlink.io/?url=https%3A%2F%2Fnandi-dhaba.vercel.app%2F&screenshot=true&meta=false&embed=screenshot.url&viewport.width=1280&viewport.height=720",
+        "image": "./Media/Nandi.png",
         "technologies": ["Next.js", "Tailwind CSS", "Responsive"],
         "liveUrl": "https://nandi-dhaba.vercel.app/",
         "githubUrl": "https://nandi-dhaba.vercel.app/"

@@ -55,8 +55,8 @@ const Row = ({ s, index }) => {
       }}
     >
       <span
-        className="font-black text-[#0C0C0C] shrink-0 leading-none"
-        style={{ fontSize: 'clamp(3rem, 10vw, 140px)' }}
+        className="font-black text-[#0C0C0C] shrink-0 leading-none tabular-nums text-right"
+        style={{ fontSize: 'clamp(3rem, 10vw, 140px)', minWidth: '1.6em' }}
       >
         {s.n}
       </span>

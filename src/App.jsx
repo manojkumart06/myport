@@ -34,6 +34,34 @@ const App = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [heroInView, setHeroInView] = useState(true);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
+
+  // Scrollspy: whichever section's top is closest above an "active line"
+  // near the top of the viewport becomes the active nav item.
+  useEffect(() => {
+    const ids = ['about', 'services', 'stack', 'projects', 'experience', 'education', 'contact'];
+
+    const onScroll = () => {
+      const activeLine = window.scrollY + window.innerHeight * 0.28;
+      let current = '';
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        // absolute top of the section in the document
+        const top = el.getBoundingClientRect().top + window.scrollY;
+        if (top <= activeLine) current = id;
+      }
+      setActiveSection(current);
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const el = document.getElementById('home');
@@ -205,7 +233,7 @@ const App = () => {
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="nav-cta-hover text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-base lg:text-[1.1rem] transition-colors duration-200"
+                className={`nav-cta-hover font-medium uppercase tracking-wider text-sm md:text-base lg:text-[1.1rem] transition-colors duration-200 ${activeSection === item.toLowerCase() ? 'nav-cta-active' : 'text-[#D7E2EA]'}`}
               >
                 {item}
               </a>
@@ -230,7 +258,7 @@ const App = () => {
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
-                  className="nav-cta-hover text-[#D7E2EA] font-medium uppercase tracking-wider text-base transition-colors duration-200"
+                  className={`nav-cta-hover font-medium uppercase tracking-wider text-base transition-colors duration-200 ${activeSection === item.toLowerCase() ? 'nav-cta-active' : 'text-[#D7E2EA]'}`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item}

@@ -113,7 +113,7 @@ const AboutSection = () => {
                 <img
                   src={portfolioData.avatar}
                   alt={portfolioData.name}
-                  className="block object-cover w-[200px] h-[240px] sm:w-[240px] sm:h-[290px] md:w-[280px] md:h-[340px]"
+                  className="block object-cover w-[200px] h-[200px] sm:w-[240px] sm:h-[220px] md:w-[280px] md:h-[290px]"
                   draggable={false}
                   loading="lazy"
                 />
